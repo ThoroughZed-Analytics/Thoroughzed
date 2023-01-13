@@ -1,4 +1,4 @@
-# Team Agreement
+# Team Agreement: Oliver Speir, Harper Foley, Jason Christopher, Dennis Nichols
 
 ## Cooperation Plan
 
