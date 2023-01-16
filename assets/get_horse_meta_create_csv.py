@@ -74,13 +74,21 @@ def get_summary_horse_data(horse_id):
     # Transform data into json format
     summary_horse_data = response.json()
     # Transform data into string that can be read by pandas
-    summary_horse_data = json.dumps(summary_horse_data)
 
-    return summary_horse_data
+
+    #summary_horse_data = json.dumps(summary_horse_data)
+
+
+    return pd.json_normalize(summary_horse_data, sep='_')
 
 
 if __name__ == '__main__':
-    horse_id = input('> enter horse id: ')
+    # horse_id = input('> enter horse id: ')
+    horse_id = 154936
     meta_data = get_summary_horse_data(int(horse_id))
-    df = pd.read_json(meta_data)
+    #df = pd.read_json(meta_data)
+    df = pd.json_normalize(meta_data, sep='_')
+
+    print(df)
+    #print(meta_data.items())
     df.to_csv('assets/example_data/horse_meta_data.csv')
