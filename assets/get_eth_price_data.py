@@ -11,13 +11,13 @@ url = 'https://rest.coinapi.io/v1/exchangerate/ETH/USD/history?period_id=1DAY&ti
 headers = {'X-CoinAPI-Key' : api_key}
 response = requests.get(url, headers=headers)
 
-# response_json = response.json()
-#
-# json_df = pd.read_json(response_json)
-#
-# print(type(response_json))
+response_json = response.json()
 
-# formatted_response = json.dumps(response, indent=4)
+json_df = pd.read_json(response_json)
+#
+print(type(response_json))
+
+formatted_response = json.dumps(response, indent=4)
 
 # response_json = json.loads(response)
 
