@@ -1,6 +1,5 @@
 import requests
 import pandas as pd
-import json
 
 def get_summary_horse_data(horse_id):
     
@@ -27,28 +26,6 @@ def get_summary_horse_data(horse_id):
 			number_of_races
 			win_rate
 		}
-		offsprings {
-			bloodline
-			breed_type
-			color
-			gen
-			horse_type
-			nft_id
-			race_statistic {
-				first_place_finishes
-				second_place_finishes
-				third_place_finishes
-				number_of_races
-				win_rate
-				positions_per_distance{
-					distance
-					positions{
-						frequency
-						position
-					}
-				}
-			}
-	}
 	}
 }
     """
@@ -73,22 +50,18 @@ def get_summary_horse_data(horse_id):
     
     # Transform data into json format
     summary_horse_data = response.json()
-    # Transform data into string that can be read by pandas
+    
+    # flattens json
+    summary_horse_data = pd.json_normalize(summary_horse_data)
 
-
-    #summary_horse_data = json.dumps(summary_horse_data)
-
-
-    return pd.json_normalize(summary_horse_data, sep='_')
+    return summary_horse_data
 
 
 if __name__ == '__main__':
     # horse_id = input('> enter horse id: ')
     horse_id = 154936
     meta_data = get_summary_horse_data(int(horse_id))
-    #df = pd.read_json(meta_data)
-    df = pd.json_normalize(meta_data, sep='_')
+    
+    print(len(meta_data.columns))
 
-    print(df)
-    #print(meta_data.items())
-    df.to_csv('assets/example_data/horse_meta_data.csv')
+    meta_data.to_csv('assets/example_data/horse_meta_data.csv')
