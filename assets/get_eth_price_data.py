@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import os
 import json
 import pandas as pd
+import datetime as dt
 
 # functions to convert from base time format into unix time in seconds and round down to 2 digits
 
@@ -20,7 +21,6 @@ api_key = os.environ.get('COIN_API_KEY')
 
 url = 'https://rest.coinapi.io/v1/exchangerate/ETH/USD/history?period_id=1HRS&time_start=2021-01-01T00%3A00%3A00&time_end=2022-01-01T00%3A00%3A00'
 headers = {'X-CoinAPI-Key' : api_key}
-response = requests.get(url, headers=headers)
 
 
 # convert response data to json and then into pandas df
