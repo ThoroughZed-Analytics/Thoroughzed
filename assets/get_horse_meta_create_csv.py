@@ -81,6 +81,6 @@ def get_summary_horse_data(horse_id):
 
 if __name__ == '__main__':
     horse_id = input('> enter horse id: ')
-    meta_data = get_summary_horse_data(horse_id)
+    meta_data = get_summary_horse_data(int(horse_id))
     df = pd.read_json(meta_data)
     df.to_csv('assets/example_data/horse_meta_data.csv')
