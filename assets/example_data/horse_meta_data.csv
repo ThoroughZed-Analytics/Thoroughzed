@@ -1,0 +1,2 @@
+,errors
+0,"{'locations': [{'column': 8, 'line': 3}], 'message': 'Argument ""input"" has invalid value $input.\nIn field ""horse_id"": Expected type ""Int!"", found ""154936"".'}"
