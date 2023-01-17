@@ -1,4 +1,4 @@
-from assets.get_horse_meta_create_csv import get_summary_horse_data
+from assets.meta_data_query_and_loop_script import get_summary_horse_data
 import math
 
 
