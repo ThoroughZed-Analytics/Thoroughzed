@@ -20,7 +20,7 @@ sale_column = list(sale_column)
 # Get proper index
 # sale_column = sale_column[0:17007] # harper
 # sale_column = sale_column[17007:34014] # oliver
-sale_column = sale_column[34014:] # jason
+sale_column = sale_column[34014:36000] # jason
 print(len(sale_column))
 
 # initiates data frame with correct columns (schema)
@@ -37,17 +37,16 @@ def loop(counter=0):
             print("ID, Counter: ", x, counter)
             global df
             df = pd.concat([df, result])
+            df.to_csv('all_horse_meta_christopher.csv')
             counter += 1
             time.sleep(0.1)
         except:
             break
-    if counter <= len(sale_column):
+    if counter <= len(sale_column) - 1:
         print("restarting")
-        time.sleep(1)
+        time.sleep(30)
         loop(counter)
 
 
 loop()
 
-# Change to your name; will merge all csvs once runs are complete
-df.to_csv('all_horse_meta_harper.csv')
