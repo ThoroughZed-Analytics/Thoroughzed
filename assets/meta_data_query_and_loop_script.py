@@ -76,7 +76,7 @@ def get_summary_horse_data(horse_id):
 
 
 #################################################################
-sale_data = pd.read_csv("../assets/example_data/sales_data.csv")
+sale_data = pd.read_csv("assets/example_data/sales_data.csv")
 
 # gets column from csv
 sale_column = sale_data['token_id']
