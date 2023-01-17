@@ -1,9 +1,12 @@
 from get_horse_meta_create_csv import get_summary_horse_data
 import pandas as pd
 import time
+import logging
 
 
-sale_data = pd.read_csv("assets/example_data/sales_data.csv")
+logging.basicConfig(filename='error.log', level=logging.ERROR)
+
+sale_data = pd.read_csv("example_data/sales_data.csv")
 
 # gets column from csv
 sale_column = sale_data['token_id']
@@ -19,7 +22,6 @@ sale_column = list(sale_column)
 
 global df
 df = get_summary_horse_data(154936)
-
 
 def loop(counter=0):
     # while counter < 100:
