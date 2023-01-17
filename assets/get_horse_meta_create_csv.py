@@ -58,14 +58,14 @@ def get_summary_horse_data(horse_id):
 
     # Execute the POST query to GraphQL endpoint
     response = requests.post(base_url, json=payload, headers=headers) 
-    print(response)
+    # print(response)
 
     # Transform data into json format
     summary_horse_data = response.json()
     
     # flattens json
     summary_horse_data = pd.json_normalize(summary_horse_data)
-    print(f'running for {horse_id}')
+    # print(f'running for {horse_id}')
     return summary_horse_data
 
 
