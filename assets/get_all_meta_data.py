@@ -18,41 +18,30 @@ sale_column = set(sale_column)
 sale_column = list(sale_column)
 
 # initiates data frame with correct columns (schema)
+# df = get_summary_horse_data(154936)
+
+global df
 df = get_summary_horse_data(154936)
 
-sale_column_sub = sale_column[1:201]
+def loop(counter=0):
+    # while counter < 100:
+    for x in sale_column[counter:31]:
+        try:
+            result = get_summary_horse_data(x)
+            print("ID, Counter: ", x, counter)
+            global df
+            df = pd.concat([df, result])
+            counter += 1
+            time.sleep(0.1)
+        except:
+            break
+    if counter < 30:
+        print("restarting")
+        time.sleep(10)
+        loop(counter)
 
-# loops
 
-# chunk_size = 30
-# delay = 0.1
-# chunk_wait = 15
-#
-# for i in range(0, len(sale_column_sub), chunk_size):
-#     chunk = sale_column_sub[i:i+chunk_size]
-#     for id_var in chunk:
-#         try:
-#             result = get_summary_horse_data(id_var)
-#             time.sleep(delay)
-#         except Exception as e:
-#             print(e)
-#             logging.exception("An error occured")
-#         else:
-#             df = pd.concat([df, result])
-#         finally:
-#             print('moving to next horse')
-#     time.sleep(chunk_wait)
-
-# for x in sale_column[1:200]:
-#     try:
-#         result = get_summary_horse_data(x)
-#         time.sleep(.1)
-#     except Exception as e:
-#         print(e)
-#         logging.exception("An error occured")
-#     else:
-#         df = pd.concat([df, result])
-#     finally:
-#         print('moving to next horse')
+loop()
+print(df)
 
 df.to_csv('all_horse_meta.csv')
