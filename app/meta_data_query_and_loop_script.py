@@ -154,10 +154,15 @@ if __name__ == '__main__':
             
             print(query_df.tail(1), f"count: {i}")
             
-            query_df.to_csv('sales_and_stats.csv')
+            query_df.to_csv('sales_and_stats_harper.csv')
             
             time.sleep(0.1)
             i += 1
+       
         except KeyboardInterrupt:
             print("\nScript interrupted by user. Exiting...")
             sys.exit()
+       
+        except:
+            time.sleep(15)
+            continue
