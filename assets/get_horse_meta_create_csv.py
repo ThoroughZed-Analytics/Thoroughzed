@@ -1,5 +1,9 @@
 import requests
 import pandas as pd
+import logging
+import time
+
+logging.basicConfig(filename='error.log', level=logging.ERROR)
 
 def get_summary_horse_data(horse_id):
     
@@ -53,15 +57,14 @@ def get_summary_horse_data(horse_id):
     
     # flattens json
     summary_horse_data = pd.json_normalize(summary_horse_data)
-
+    print(f'running for {horse_id}')
     return summary_horse_data
 
 
 if __name__ == '__main__':
     # horse_id = input('> enter horse id: ')
-    horse_id = 154936
+    horse_id = 393554
     meta_data = get_summary_horse_data(int(horse_id))
-    
-    print(len(meta_data.columns))
 
-    meta_data.to_csv('assets/example_data/horse_meta_data.csv')
+
+    meta_data.to_csv('example_data/horse_meta_data.csv')
