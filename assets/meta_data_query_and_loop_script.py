@@ -1,6 +1,7 @@
 import pandas as pd
 import time
 import logging
+import requests
 
 
 logging.basicConfig(filename='error.log', level=logging.ERROR)
@@ -60,23 +61,17 @@ def get_summary_horse_data(horse_id):
     }
 
     # Execute the POST query to GraphQL endpoint
-    response = requests.post(base_url, json=payload, headers=headers) 
-<<<<<<< HEAD:assets/get_horse_meta_create_csv.py
-    # print(response)
-=======
-    #print(response.status_code)
->>>>>>> dev:assets/meta_data_query_and_loop_script.py
+    response = requests.post(base_url, json=payload, headers=headers)
+    # print(response.status_code)
 
     # Transform data into json format
     summary_horse_data = response.json()
     
     # flattens json
     summary_horse_data = pd.json_normalize(summary_horse_data)
-<<<<<<< HEAD:assets/get_horse_meta_create_csv.py
+
     # print(f'running for {horse_id}')
-=======
-    #print(f'running for {horse_id}')
->>>>>>> dev:assets/meta_data_query_and_loop_script.py
+
     return summary_horse_data
 
 
