@@ -1,4 +1,4 @@
-from assets.meta_data_query_and_loop_script import get_summary_horse_data
+from app.meta_data_query_and_loop_script import get_summary_horse_data
 import math
 
 

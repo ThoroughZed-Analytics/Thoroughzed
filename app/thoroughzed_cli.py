@@ -1,4 +1,4 @@
-from assets.get_intrinsic_value import get_intrinsic_value
+from app.get_intrinsic_value import get_intrinsic_value
 
 
 def run_cli():
