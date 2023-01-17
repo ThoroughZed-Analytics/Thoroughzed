@@ -11,27 +11,34 @@ def get_summary_horse_data(horse_id):
 
     query = """
     query($input: HorseInput) {
-	horse(input: $input) {
-		name
-		nft_id
-		img_url
-		gen
-		bloodline
-		breed_type
-		color
-		inserted_at
-		last_breeding_reset
-		breeding_counter
-		horse_type
-		race_statistic {
-			first_place_finishes
-			second_place_finishes
-			third_place_finishes
-			number_of_races
-			win_rate
-		}
-	}
-}
+        horse(input: $input) {
+            name
+            nft_id
+            img_url
+            gen
+            bloodline
+            breed_type
+            color
+            inserted_at
+            super_coat
+            horse_type
+            race_statistic {
+                first_place_finishes
+                second_place_finishes
+                third_place_finishes
+                number_of_races
+                win_rate
+                number_of_free_races
+                number_of_paid_races
+                free_win_rate
+                paid_win_rate
+            }
+            parents{
+                name
+                nft_id
+            }
+        }
+    }
     """
 
     variables = {
@@ -51,7 +58,8 @@ def get_summary_horse_data(horse_id):
 
     # Execute the POST query to GraphQL endpoint
     response = requests.post(base_url, json=payload, headers=headers) 
-    
+    print(response)
+
     # Transform data into json format
     summary_horse_data = response.json()
     
@@ -63,8 +71,8 @@ def get_summary_horse_data(horse_id):
 
 if __name__ == '__main__':
     # horse_id = input('> enter horse id: ')
-    horse_id = 393554
+    horse_id = 8919
     meta_data = get_summary_horse_data(int(horse_id))
 
 
-    meta_data.to_csv('example_data/horse_meta_data.csv')
+    meta_data.to_csv('assets/example_data/horse_meta_data.csv')
