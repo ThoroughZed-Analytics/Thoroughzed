@@ -24,8 +24,7 @@ global df
 df = get_summary_horse_data(154936)
 
 def loop(counter=0):
-    # while counter < 100:
-    for x in sale_column[counter:31]:
+    for x in sale_column[counter:len(sale_column)]:
         try:
             result = get_summary_horse_data(x)
             print("ID, Counter: ", x, counter)
@@ -35,13 +34,12 @@ def loop(counter=0):
             time.sleep(0.1)
         except:
             break
-    if counter < 30:
+    if counter <= len(sale_column):
         print("restarting")
         time.sleep(10)
         loop(counter)
 
 
 loop()
-print(df)
 
 df.to_csv('all_horse_meta.csv')
