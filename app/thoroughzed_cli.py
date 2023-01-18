@@ -60,10 +60,13 @@ def run_cli():
         if id.lower() == "q":
             exit()
     choice = input(f"> Would you like to find the {color_words[3]} or {color_words[4]}? Or type {color_words[1]} to quit. Or h for help. ")
-    if choice.lower() == 'h':
-        help()
     if choice.lower() == "q":
         exit()
+    while id.lower() == 'h':
+        help()
+        id = input(f"> Please enter the Horse/NFT ID for the horse you'd like to evaluate or type {color_words[1]} to quit. Or h for help. ")
+        if id.lower() == "q":
+            exit()
     while choice != "r" and choice != "i":
         print(f"{color_words[2]}")
         choice = input(f"> Would you like to find the {color_words[3]} or {color_words[4]}? Or type {color_words[1]} to quit. Or h for help.")
