@@ -28,12 +28,12 @@ def run_cli():
         if id.lower() == "q":
             exit()
     if choice == "i":
-        cost = input(f"> Enter the requested price of the horse in USD. Or type {color_words[1]} to quit. ")
+        cost = input(f"> Enter the listing price of the horse in USD. Or type {color_words[1]} to quit. ")
         if cost.lower() == "q":
             exit()
         while not cost.isdigit():
             print("> *** Not a valid cost! ***")
-            cost = input(f"> Enter the requested price of the horse in USD. Or type {color_words[1]} to quit. ")
+            cost = input(f"> Enter the listing price of the horse in USD. Or type {color_words[1]} to quit. ")
             if cost.lower() == "q":
                 exit()
         results = get_intrinsic_value(int(id), int(cost))
@@ -43,13 +43,13 @@ def run_cli():
         else:
             print('> Potential Net Earnings Per Race: ', colored(f'${results[0]}', 'red'))
         if float(results[1]) >= 0:
-            print('> Potential 3-Month Yield: ', colored(f'${results[1]}', 'green'))
+            print('> Potential 3-Month Yield: ', colored(f'{results[1]}%', 'green'))
         else:
-            print('> Potential 3-Month Yield: ', colored(f'${results[1]}', 'red'))
+            print('> Potential 3-Month Yield: ', colored(f'{results[1]}%', 'red'))
         if float(results[2]) >= 0:
-            print('> Races Needed to Cover Cost of Horse: ', colored(f'${results[2]}', 'green'))
+            print('> Races Needed to Cover Cost of Horse: ', colored(f'{"{0:,}".format(results[2])}', 'green'))
         else:
-            print('> Races Needed to Cover Cost of Horse: ', colored(f'${results[2]}', 'red'))
+            print('> Races Needed to Cover Cost of Horse: ', colored(f'{"{0:,}".format(results[2])}', 'red'))
 
     if choice == "r":
         filename = 'app/dashboard_notebook.ipynb'
