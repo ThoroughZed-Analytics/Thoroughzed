@@ -1,6 +1,9 @@
 from app.get_intrinsic_value import get_intrinsic_value
 from termcolor import colored
 from assets.art import art
+import nbformat
+from nbconvert.preprocessors import ExecutePreprocessor
+from json import load
 
 
 def run_cli():
@@ -34,6 +37,7 @@ def run_cli():
             if cost.lower() == "q":
                 exit()
         results = get_intrinsic_value(int(id), int(cost))
+
         if float(results[0]) >= 0:
             print('> Potential Net Earnings Per Race: ', colored(f'${results[0]}', 'green'))
         else:
@@ -46,6 +50,16 @@ def run_cli():
             print('> Races Needed to Cover Cost of Horse: ', colored(f'${results[2]}', 'green'))
         else:
             print('> Races Needed to Cover Cost of Horse: ', colored(f'${results[2]}', 'red'))
+
+    if choice == "r":
+        filename = 'app/dashboard_notebook.ipynb'
+        with open(filename) as fp:
+            nb = load(fp)
+
+        for cell in nb['cells']:
+            if cell['cell_type'] == 'code':
+                source = ''.join(line for line in cell['source'] if not line.startswith('%'))
+                exec(source, globals(), locals())
 
 
 if __name__ == "__main__":
