@@ -1,9 +1,19 @@
 from app.get_intrinsic_value import get_intrinsic_value
 from termcolor import colored
 from assets.art import art
+from app.get_relative_value import get_relative_value
 import nbformat
 from nbconvert.preprocessors import ExecutePreprocessor
 from json import load
+import ssl
+import pandas as pd
+import numpy as np
+import panel as pn
+import holoviews as hv
+pn.extension('tabulator')
+
+import hvplot.pandas
+import panel.template.theme
 
 
 def help():
@@ -86,14 +96,42 @@ def run_cli():
                 print('> Races Needed to Cover Cost of Horse: ', colored(f'{"{0:,}".format(results[2])}', 'red'))
 
     if choice == "r":
-        filename = 'app/dashboard_notebook.ipynb'
-        with open(filename) as fp:
-            nb = load(fp)
+        num = get_relative_value(int(id))
+        print(num)
 
-        for cell in nb['cells']:
-            if cell['cell_type'] == 'code':
-                source = ''.join(line for line in cell['source'] if not line.startswith('%'))
-                exec(source, globals(), locals())
+        def open_dash():
+            ACCENT_COLOR = pn.template.FastGridTemplate.accent_base_color
+            XS = np.linspace(0, np.pi)
+
+            def sine(freq, phase):
+                return hv.Curve((XS, np.sin(XS * freq + phase))).opts(
+                    responsive=True, min_height=400, title="Sine", color=ACCENT_COLOR
+                ).opts(line_width=6)
+
+            def cosine(freq, phase):
+                return hv.Curve((XS, np.cos(XS * freq + phase))).opts(
+                    responsive=True, min_height=400, title="Cosine", color=ACCENT_COLOR
+                ).opts(line_width=6)
+
+            freq = pn.widgets.FloatSlider(name="Frequency", start=0, end=10, value=2)
+            phase = pn.widgets.FloatSlider(name="Phase", start=0, end=np.pi)
+
+            sine = pn.bind(sine, freq=freq, phase=phase)
+            cosine = pn.bind(cosine, freq=freq, phase=phase)
+
+            template = pn.template.FastGridTemplate(
+                site="ThoroughZED Analytics", title="Relative Valuation Dashboard",
+                header_color='red', header_background='black', theme='dark',
+                main_layout='card',
+                sidebar=[pn.pane.Markdown("## Settings"), freq, phase],
+            )
+
+            template.main[:3, :6] = pn.pane.HoloViews(hv.DynamicMap(sine), sizing_mode="stretch_both")
+            template.main[:3, 6:] = pn.pane.HoloViews(hv.DynamicMap(cosine), sizing_mode="stretch_both")
+            template.show()
+
+        open_dash()
+
 
 
 if __name__ == "__main__":
