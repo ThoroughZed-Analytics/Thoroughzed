@@ -34,9 +34,18 @@ def run_cli():
             if cost.lower() == "q":
                 exit()
         results = get_intrinsic_value(int(id), int(cost))
-        print(colored('> Potential Net Earnings Per Race: ', 'green'), f'${results[0]}')
-        print(colored('> Potential 3-Month Yield: ', 'green'), f"{results[1]}%")
-        print(colored('> Races Needed to Cover Cost of Horse: ', 'green'), f"{results[2]}")
+        if float(results[0]) >= 0:
+            print('> Potential Net Earnings Per Race: ', colored(f'${results[0]}', 'green'))
+        else:
+            print('> Potential Net Earnings Per Race: ', colored(f'${results[0]}', 'red'))
+        if float(results[1]) >= 0:
+            print('> Potential 3-Month Yield: ', colored(f'${results[1]}', 'green'))
+        else:
+            print('> Potential 3-Month Yield: ', colored(f'${results[1]}', 'red'))
+        if float(results[2]) >= 0:
+            print('> Races Needed to Cover Cost of Horse: ', colored(f'${results[2]}', 'green'))
+        else:
+            print('> Races Needed to Cover Cost of Horse: ', colored(f'${results[2]}', 'red'))
 
 
 if __name__ == "__main__":
