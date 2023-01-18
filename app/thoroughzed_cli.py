@@ -1,6 +1,10 @@
 from app.get_intrinsic_value import get_intrinsic_value
 from termcolor import colored
 from assets.art import art
+import nbformat
+from nbconvert.preprocessors import ExecutePreprocessor
+from json import load
+
 
 
 def run_cli():
@@ -37,6 +41,15 @@ def run_cli():
         print(colored('> Potential Net Earnings Per Race: ', 'green'), f'${results[0]}')
         print(colored('> Potential 3-Month Yield: ', 'green'), f"{results[1]}%")
         print(colored('> Races Needed to Cover Cost of Horse: ', 'green'), f"{results[2]}")
+    if choice == "r":
+        filename = 'app/dashboard_notebook.ipynb'
+        with open(filename) as fp:
+            nb = load(fp)
+
+        for cell in nb['cells']:
+            if cell['cell_type'] == 'code':
+                source = ''.join(line for line in cell['source'] if not line.startswith('%'))
+                exec(source, globals(), locals())
 
 
 if __name__ == "__main__":
