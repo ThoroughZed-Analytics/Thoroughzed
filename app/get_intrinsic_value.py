@@ -1,24 +1,26 @@
 from app.meta_data_query_and_loop_script import get_summary_horse_data
+from app.Horse import Horse
 import math
 
 
 def get_intrinsic_value(id, horse_cost):
     # extract data from horse
-    df = get_summary_horse_data(id)
-    total_races = df['data.horse.race_statistic.number_of_races'][0]
+    horse_object = get_summary_horse_data(id)
+    horse = Horse(horse_object)
+    total_races = horse.total_races
     if total_races == 0:
         return 'Unraced'
-    first_place_percent = df['data.horse.race_statistic.win_rate'][0]
-    second_place_percent = df['data.horse.race_statistic.second_place_finishes'][0] / total_races * 100
-    third_place_percent = df['data.horse.race_statistic.third_place_finishes'][0] / total_races * 100
-    total_free_races = df['data.horse.race_statistic.number_of_free_races'][0]
-    total_paid_races = df['data.horse.race_statistic.number_of_paid_races'][0]
-    first_place_percent_free = df['data.horse.race_statistic.free_win_rate'][0]
-    first_place_percent_paid = df['data.horse.race_statistic.paid_win_rate'][0]
+    win_rate = horse.win_rate
+    place_rate = horse.place_rate
+    show_rate = horse.show_rate
+    total_free_races = horse.total_free_races
+    total_paid_races = horse.total_paid_races
+    win_rate_free = horse.free_win_rate
+    win_rate_paid = horse.paid_win_rate
     
 
     # Potential net earnings for each race (takes into account entry fee)
-    per_race_net_win = ((6 * first_place_percent / 100) + (3 * second_place_percent / 100) + (2 * third_place_percent / 100)) - 1
+    per_race_net_win = ((6 * win_rate / 100) + (3 * place_rate / 100) + (2 * show_rate / 100)) - 1
 
     # 3-month yield (assuming 10 races per day)
     three_month_yield = (per_race_net_win * 90 * 10) / horse_cost * 100
@@ -30,4 +32,4 @@ def get_intrinsic_value(id, horse_cost):
 
 
 if __name__ == '__main__':
-    get_intrinsic_value(8919, 1000)
+    print(get_intrinsic_value(8919, 1000))
