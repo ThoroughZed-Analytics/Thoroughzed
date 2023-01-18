@@ -1,7 +1,11 @@
-import pandas as pd
-import time
-import logging
+import sys
 import requests
+import logging
+import backoff
+import pandas as pd
+import json
+from pandas import json_normalize
+import time
 
 
 logging.basicConfig(filename='error.log', level=logging.ERROR)
@@ -74,57 +78,91 @@ def get_summary_horse_data(horse_id):
 
     return summary_horse_data
 
+@backoff.on_exception(backoff.expo, Exception, max_tries=8)
+def get_horse_data(horse_id):
+    base_url = 'https://api.zed.run/api/v1/races/horse_stats'
 
-#################################################################
-sale_data = pd.read_csv("data/master_data/sales_data.csv")
+    payload = {
+        "content-type": "application/json"
+    }
 
-# gets column from csv
-sale_column = sale_data['token_id']
+    variables = {
+        "horse_id": horse_id
+    }
 
-# removes duplicates
-sale_column = set(sale_column)
+    response = requests.get(base_url, json=payload, params=variables)
 
-# makes iterable
-sale_column = list(sale_column)
+    response_json = response.json()
 
-# Get proper index
-# sale_column = sale_column[0:17007] # harper
-
-sale_column = sale_column[17007:34014] # oliver
-
-# sale_column = sale_column[34014:] # jason
-print(len(sale_column))
-
-# initiates data frame with correct columns (schema)
-# df = get_summary_horse_data(154936)
-
+    flat_response = json_normalize(response_json)
+    return flat_response
 ##################################################################
 
-global df
-df = pd.DataFrame()
+# global df
+# df = pd.DataFrame()
 
-def loop(counter=0):
-    for x in sale_column[counter:len(sale_column)]:
+# def loop(counter=0):
+#     for x in sale_column[counter:len(sale_column)]:
+#         try:
+#             result = get_summary_horse_data(x)
+#             #print(result)
+#             print("ID, Counter: ", x, counter)
+#             global df
+#             df = pd.concat([df, result])
+#             counter += 1
+#             df.to_csv('all_horse_meta_oliver.csv')
+#             time.sleep(0.1)
+#         except:
+#             break
+#     if counter <= len(sale_column)-1:
+#         print("failed")
+#         time.sleep(30)
+#         loop(counter)
+
+
+
+if __name__ == '__main__': 
+    
+    sale_data = pd.read_csv("data/master_data/sales_data.csv")
+
+    # gets column from csv
+    sale_column = sale_data['token_id']
+
+    # removes duplicates
+    sale_column = set(sale_column)
+
+    # makes iterable
+    horses = list(sale_column) # len(horses) = 51021
+    
+    # Get proper index
+    horses = horses[0:12756] # harper
+    # horses = horses[12756:25511] # oliver
+    # horses = horses[25511:38266] # jason
+    # horses = horses[38266:] # dennis
+
+    query_df = pd.DataFrame()
+    
+    i = 0
+
+    while i < len(horses):
+        id = horses[i]
         try:
-            result = get_summary_horse_data(x)
-            #print(result)
-            print("ID, Counter: ", x, counter)
-            global df
-            df = pd.concat([df, result])
-            counter += 1
-            df.to_csv('all_horse_meta_oliver.csv')
+            horse_query_result = get_horse_data(id)
+            horse_query_result = horse_query_result.assign(horse_id=id)
+            query_df = pd.concat([query_df, horse_query_result])
+            query_df = query_df.drop((['win_place.place', 'win_place.races', 'win_place.wins', 'last_five']), axis=1)
+            
+            print(query_df.tail(1), f"count: {i}")
+            
+            query_df.to_csv('sales_and_stats_harper.csv')
+            
             time.sleep(0.1)
+            i += 1
+       
+        except KeyboardInterrupt:
+            print("\nScript interrupted by user. Exiting...")
+            sys.exit()
+       
         except:
-            break
-    if counter <= len(sale_column)-1:
-        print("failed")
-        time.sleep(30)
-        loop(counter)
-
-
-
-if __name__ == '__main__':
-    print(f" press enter to start looping over {len(sale_column)} horse IDs")
-    input('>')
-    loop()
-    df.to_csv('all_horse_meta_oliver.csv')
+            time.sleep(15)
+            continue
