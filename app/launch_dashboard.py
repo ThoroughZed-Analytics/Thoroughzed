@@ -43,39 +43,47 @@ def launch_dashboard(id):
 
     # BREED GRAPHS
 
-    def rate_by_breed():
-        plot = sns.barplot(data=by_breed, x='breed_type', y='win_rate')
-        return plot.figure
+    def win_rate_by_breed():
+        fig = plt.figure()
+        sns.barplot(data=by_breed, x='breed_type', y='win_rate')
+        plt.title('Mean Win Rate by Breed Type')
+        return fig
 
-    barchart_win_rate_by_breed = sns.barplot(data=by_breed, x='breed_type', y='win_rate')
-    # barchart_win_rate_by_breed = barchart_win_rate_by_breed.plt.title('Mean Win Rate by Breed Type')
+    def avg_win_by_bloodline():
+        fig = plt.figure()
+        sns.barplot(data=by_blood, x='bloodline', y='overall.first')
+        plt.title('Mean number of first place finishes')
+        return fig
 
-    barchart_avg_win_num_by_breed = sns.barplot(data=by_breed, x='breed_type', y='overall.first')
-    # barchart_avg_win_num_by_breed = barchart_avg_win_num_by_breed.plt.title('Mean Number of 1st Place Finishes by Breed')
+    def violin_price_by_breed():
+        fig = plt.figure()
+        sns.violinplot(data=market_data_no_outliers, x='breed_type', y='converted_price')
+        plt.title('price by breed')
+        return fig
+        
 
-    violin_usd_price_by_breed = sns.violinplot(data=market_data_no_outliers, x='breed_type', y='converted_price')
+    def lineplot_sale_breed_time():
+        fig = plt.figure()
+        sns.lineplot(data=breed_daily, x='day_sold', y='converted_price', hue='breed_type')
+        plt.title('Sale Price Breed Time')
+        return fig
 
-    lineplot_sale_price_breed_time = sns.lineplot(data=breed_daily, x='day_sold', y='converted_price', hue='breed_type')
-    # lineplot_sale_price_breed_time = lineplot_sale_price_breed_time.plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True, prune='both'))
-    # lineplot_sale_price_breed_time = lineplot_sale_price_breed_time.plt.xticks(rotation=45)
-    # lineplot_sale_price_breed_time = lineplot_sale_price_breed_time.set(xlabel=None)
-    # lineplot_sale_price_breed_time = lineplot_sale_price_breed_time.plt.ylabel('Sale Price (USD)')
-    # lineplot_sale_price_breed_time = lineplot_sale_price_breed_time.plt.title('Horse Sale Price by Breed Over Time')
 
     ##############################################################################
 
     # BLOODLINE GRAPHS
 
-    barchart_median_win_by_blood = sns.barplot(data=by_blood, x='bloodline', y='win_rate')
-    # barchart_median_win_by_blood = barchart_median_win_by_blood.plt.title('Median Win Rate by Bloodline')
-    # barchart_median_win_by_blood = barchart_median_win_by_blood.plt.xticks(rotation=45)
+    def barchart_median_win_by_blood():
+        fig = plt.figure()
+        sns.barplot(data=by_blood, x='bloodline', y='win_rate')
+        plt.title('Median win by bloodline')
+        return fig
 
-    lineplot_sale_price_blood_time = sns.lineplot(data=daily, x='day_sold', y='converted_price', hue='bloodline')
-    # lineplot_sale_price_blood_time = lineplot_sale_price_blood_time.plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True, prune='both'))
-    # lineplot_sale_price_blood_time = lineplot_sale_price_blood_time.plt.xticks(rotation=45)
-    # lineplot_sale_price_blood_time = lineplot_sale_price_blood_time.set(xlabel=None)
-    # lineplot_sale_price_blood_time = lineplot_sale_price_blood_time.plt.ylabel('Sale Price (USD)')
-    # lineplot_sale_price_blood_time = lineplot_sale_price_blood_time.plt.title('Horse Sale Price by Bloodline Over Time')
+    def lineplot_price_blood_time():
+        fig = plt.figure()
+        sns.lineplot(data=daily, x='day_sold', y='converted_price', hue='bloodline')
+        plt.title('price by blood over time')
+        return fig
 
     ###############################################################################
 
@@ -97,40 +105,16 @@ def launch_dashboard(id):
         title='ThoroughZED Analytics - Relative Valuation', logo='https://i.imgur.com/3rpZHfT.png', header_background='black', header_color='red', font='times', shadow=True,
         sidebar=[pn.pane.Markdown(sidebar_horse_data_message),
                  pn.pane.PNG(horse.img_url, sizing_mode='scale_both')],
-        main=[pn.Row(pn.Column(rate_by_breed))],
+        # main=[pn.Row(pn.Column(win_rate_by_breed),(avg_win_by_bloodline))],
+        # names of graphs: barchart_median_win_by_blood lineplot_price_blood_time lineplot_sale_breed_time violin_price_by_breed avg_win_by_breed win_rate_by_breed
+        main=[pn.Row(pn.Column(barchart_median_win_by_blood), 
+                    (lineplot_price_blood_time), 
+                    (lineplot_sale_breed_time), 
+                    pn.Row(pn.Column(violin_price_by_breed)), 
+                    pn.Column(avg_win_by_bloodline, win_rate_by_breed))],
         accent_base_color="#88d8b0",
     )
     template.show()
-
-    # ACCENT_COLOR = pn.template.FastGridTemplate.accent_base_color
-    # XS = np.linspace(0, np.pi)
-    #
-    # def sine(freq, phase):
-    #     return hv.Curve((XS, np.sin(XS * freq + phase))).opts(
-    #         responsive=True, min_height=400, title="Sine", color=ACCENT_COLOR
-    #     ).opts(line_width=6)
-    #
-    # def cosine(freq, phase):
-    #     return hv.Curve((XS, np.cos(XS * freq + phase))).opts(
-    #         responsive=True, min_height=400, title="Cosine", color=ACCENT_COLOR
-    #     ).opts(line_width=6)
-    #
-    # freq = pn.widgets.FloatSlider(name="Frequency", start=0, end=10, value=2)
-    # phase = pn.widgets.FloatSlider(name="Phase", start=0, end=np.pi)
-    #
-    # sine = pn.bind(sine, freq=freq, phase=phase)
-    # cosine = pn.bind(cosine, freq=freq, phase=phase)
-    #
-    # template = pn.template.FastGridTemplate(
-    #     site="ThoroughZED Analytics", title="Relative Valuation Dashboard",
-    #     header_color='red', header_background='black', theme='dark',
-    #     main_layout='card',
-    #     sidebar=[pn.pane.Markdown("## Settings"), freq, phase],
-    # )
-    #
-    # template.main[:3, :6] = pn.pane.HoloViews(hv.DynamicMap(sine), sizing_mode="stretch_both")
-    # template.main[:3, 6:] = pn.pane.HoloViews(hv.DynamicMap(cosine), sizing_mode="stretch_both")
-    # template.show()
 
 
 if __name__ == "__main__":

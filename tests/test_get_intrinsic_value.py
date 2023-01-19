@@ -2,8 +2,8 @@ import pytest
 from app.get_intrinsic_value import get_intrinsic_value
 
 def test_get_intrinsic_value_positive():
-    actual = get_intrinsic_value(8919, 1000)
-    expected = ['0.09', '7.95', 11327]
+    actual = get_intrinsic_value(153242, 20)
+    expected = ['0.00', '14.02', 6422]
     assert actual == expected
 
 def test_get_intrinsic_value_negative():
