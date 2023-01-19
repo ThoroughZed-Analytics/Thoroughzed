@@ -19,7 +19,7 @@ class Horse:
         self.total_paid_races = horse_obj['data.horse.race_statistic.number_of_paid_races'][0]
         self.free_win_rate = horse_obj['data.horse.race_statistic.free_win_rate'][0]
         self.paid_win_rate = horse_obj['data.horse.race_statistic.paid_win_rate'][0]
-        self.place_rate = (self.second_place_finishes / self.total_races) * 100
-        self.show_rate = (self.third_place_finishes / self.total_races) * 100
+        self.place_rate = 0 if self.total_races == 0 else (self.second_place_finishes / self.total_races) * 100
+        self.show_rate = 0 if self.total_races == 0 else (self.third_place_finishes / self.total_races) * 100
         self.mother = horse_obj['data.horse.parents']
         self.father = horse_obj['data.horse.parents']
