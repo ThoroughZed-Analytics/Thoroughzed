@@ -11,24 +11,24 @@ pn.extension('tabulator')
 warnings.filterwarnings(action='ignore', category=UserWarning)
 warnings.filterwarnings(action='ignore', category=FutureWarning)
 
-color_words = [colored('Horse/NFT ID', 'green', attrs=['bold']),
+color_words = [colored('Horse/NFT ID', 'green', attrs=['bold', 'underline']),
                colored("'q'", 'red', attrs=['bold']),
-               colored("> *** Not a valid input! ***", 'red', attrs=['blink']),
-               colored('(r)elative value', 'green'),
-               colored('(i)ntrinsic value', 'green'),
+               colored("> *** Not a valid input! ***", 'red', attrs=['blink', 'bold']),
+               colored('(r)elative value', 'green', attrs=['bold']),
+               colored('(i)ntrinsic value', 'green', attrs=['bold']),
                colored("'h'", 'red', attrs=['bold']),
                colored("> *** This horse has not been raced and cannot have a valuation run on its performance ***", 'red', attrs=['bold']),
                colored("> *** Not a valid Horse/NFT ID in ZED Run ***", 'red', attrs=['bold']),
                colored("'y'", 'green', attrs=['bold']),
                colored("'n'", 'red', attrs=['bold']),
                colored("> *** Type 'CTRL + C' to exit the online dashboard. ***", 'red', attrs=['bold']),
-               colored("Intrinsic Valuation", 'green', attrs=['bold']),
-               colored("Relative Valuation", 'green', attrs=['bold']),
-               colored("NOTE", 'red', attrs=['blink']),
+               colored("Intrinsic Valuation", 'green', attrs=['bold', 'underline']),
+               colored("Relative Valuation", 'green', attrs=['bold', 'underline']),
+               colored("NOTE", 'red', attrs=['bold', 'blink']),
                colored("Thank you for using ThoroughZED!", 'yellow', attrs=['bold']),
-               colored("listing price", 'green', attrs=['bold']),
-               colored('(d)ashboard', 'green'),
-               colored("> Loading...", 'yellow', attrs=['blink'])]
+               colored("listing price", 'green', attrs=['bold', 'underline']),
+               colored('(d)ashboard', 'green', attrs=['bold']),
+               colored("> Loading...", 'yellow', attrs=['blink', 'bold'])]
 
 valid = True
 

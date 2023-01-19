@@ -139,11 +139,11 @@ def launch_dashboard(id):
     # DASHBOARD RENDERING
 
     corrected_breed = horse.breed.capitalize()
-    intrinsic_value_lookup_result = get_intrinsic_value(int(horse.horse_id), 1)
     if horse.total_races == 0:
         horse_expected_winnings_per_race = "N/A"
         relative_value = "N/A"
     else:
+        intrinsic_value_lookup_result = get_intrinsic_value(int(horse.horse_id), 1)
         horse_expected_winnings_per_race = f"${intrinsic_value_lookup_result[0]}"
         relative_value = f"${predict_horse_price(int(horse.horse_id))}"
 
@@ -166,18 +166,16 @@ def launch_dashboard(id):
     * **Expected Market Value:** {relative_value}
     """
     template = pn.template.FastListTemplate(
-        title='ThoroughZED Analytics - Relative Valuation', logo='https://i.imgur.com/3rpZHfT.png', header_background='black', header_color='red', font='times', shadow=True,
+        title='ThoroughZED Analytics', logo='https://i.imgur.com/3rpZHfT.png', header_background='#09a59f', header_color='black', font='times', shadow=True, corner_radius=20, favicon='https://i.imgur.com/3rpZHfT.png', theme_toggle=False,
         sidebar=[pn.pane.Markdown(sidebar_horse_data_message),
                  pn.pane.PNG(horse.img_url, sizing_mode='scale_both')],
-        # main=[pn.Row(pn.Column(win_rate_by_breed),(avg_win_by_bloodline))],
-        # names of graphs: barchart_median_win_by_blood lineplot_price_blood_time lineplot_sale_breed_time violin_price_by_breed avg_win_by_breed win_rate_by_breed
         main=[pn.Row(pn.Column(line_blood),
                     pn.Column(barchart_median_win_by_blood),
                     pn.Column(avg_win_by_bloodline)),
               pn.Row(pn.Column(line_breed),
                     pn.Column(win_rate_by_breed),
                     pn.Column(violin_price_by_breed)),
-                    pn.Row(pn.Column(display_df))],
+              pn.Row(pn.Column(display_df))],
         accent_base_color="#88d8b0",
     )
     template.show()
