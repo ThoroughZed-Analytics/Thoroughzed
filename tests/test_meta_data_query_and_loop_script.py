@@ -9,9 +9,9 @@ def test_get_summary_horse_data_name():
     assert actual == expected
 
 def test_get_summary_horse_data_win_rate():
-    query_result = get_summary_horse_data(8919)
+    query_result = get_summary_horse_data(153242)
     actual = query_result['data.horse.race_statistic.win_rate'][0]
-    expected = 10.79
+    expected = 10.24
     assert actual == expected
 
 def test_get_summary_horse_data_genotype():
