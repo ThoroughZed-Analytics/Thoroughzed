@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LassoCV
+from sklearn.ensemble import RandomForestRegressor
 from app.meta_data_query_and_loop_script import get_horse_data
 import ssl
 
@@ -37,19 +38,21 @@ def predict_horse_price(horse):
     y = clean_market_data.converted_price
 
     # Define the model
-    model = LinearRegression()
-    model.set_params(**{'fit_intercept': True, 'positive': False})
+    # model = LinearRegression()
+    regr = RandomForestRegressor(random_state=0)
+
+    # model.set_params(**{'fit_intercept': True, 'positive': False})
 
     # set up model train and test splits
     X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=156, test_size=0.2, shuffle=True)
 
     # fit model using LassoCV for feature selection
     # Create an instance of LassoCV
-    lasso = LassoCV(cv=5)
+    # lasso = LassoCV(cv=5)
 
     # Fit the LassoCV model to the data
-    lasso.fit(X_train, y_train)
-
+    # lasso.fit(X_train, y_train)
+    regr.fit(X_train, y_train)
     # make a call to horse data api
     horse_id = horse
 
@@ -65,5 +68,5 @@ def predict_horse_price(horse):
 
     horse_to_predict = horse_to_predict.filter(categories)
     horse_to_predict = horse_to_predict.values.reshape(1,-1)
-    prediction_test = lasso.predict(horse_to_predict)
+    prediction_test = regr.predict(horse_to_predict)
     return prediction_test
