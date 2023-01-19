@@ -21,7 +21,7 @@ color_words = [colored('Horse/NFT ID', 'green', attrs=['bold']),
                colored("> *** Not a valid Horse/NFT ID in ZED Run ***", 'red', attrs=['bold']),
                colored("'y'", 'green', attrs=['bold']),
                colored("'n'", 'red', attrs=['bold']),
-               colored("> *** Type 'CTRL + C' to exit the online dashboard. ***", 'red', attrs=['blink']),
+               colored("> *** Type 'CTRL + C' to exit the online dashboard. ***", 'red', attrs=['bold']),
                colored("Intrinsic Valuation", 'green', attrs=['bold']),
                colored("Relative Valuation", 'green', attrs=['bold']),
                colored("NOTE", 'red', attrs=['blink']),
@@ -136,6 +136,7 @@ def relative(id):
 
 
 def display_dashboard(id):
+    print(f"\n{color_words[17]}")
     print(f"\n{color_words[10]}\n")
     launch_dashboard(int(id))
 
@@ -157,7 +158,7 @@ def intrinsic(id, cost):
 
 
 def run_cli():
-    print(colored(art, 'green', attrs=['blink']))
+    print(colored(art, 'green', attrs=['bold']))
     id = input(f"> Please enter the {color_words[0]} for the horse you'd like to evaluate. Or type {color_words[1]} to quit or {color_words[5]} for help. ")
     id = check_id(id)
     if id == "exit":
