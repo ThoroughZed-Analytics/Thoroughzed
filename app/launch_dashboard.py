@@ -45,6 +45,22 @@ def launch_dashboard(id):
 
     # BREED GRAPHS
 
+    def display_df():
+        abc = market_data_no_outliers.loc[market_data_no_outliers['breed_type'] == horse.breed]
+        abc = market_data_no_outliers.loc[market_data_no_outliers['bloodline'] == horse.bloodline]
+
+        above_average_abc = abc.loc[abc['converted_price'] > abc['converted_price'].mean() + abc['converted_price'].std()]
+        below_average_abc = abc.loc[abc['converted_price'] < abc['converted_price'].mean()]
+
+        avg_percentile,avg_wins,avg_races,avg_winnings,avg_price = 'Average',abc['win_rate'].mean(),abc['overall.races'].mean(),abc['total_paid'].mean(),abc['converted_price'].mean()
+        above_avg_percentile,above_avg_wins,above_avg_races,above_avg_winnings,above_avg_price ='Above Average', above_average_abc['win_rate'].mean(),above_average_abc['overall.races'].mean(),above_average_abc['total_paid'].mean(),above_average_abc['converted_price'].mean()
+        below_avg_percentile,below_avg_wins,below_avg_races,below_avg_winnings,below_avg_price = 'Below Average',below_average_abc['win_rate'].mean(),below_average_abc['overall.races'].mean(),below_average_abc['total_paid'].mean(),below_average_abc['converted_price'].mean()
+        data = [[below_avg_percentile,below_avg_wins,below_avg_races,below_avg_winnings,below_avg_price],[avg_percentile,avg_wins, avg_races, avg_winnings, avg_price],[above_avg_percentile,above_avg_wins,above_avg_races,above_avg_winnings,above_avg_price]]
+        xyz = pd.DataFrame(data,columns=['Range','Win Rate (%)','Number of Races', 'Amount Won(Eth)', 'Price(USD)'])
+        xyz = xyz.round(2)
+        df_widget = pn.widgets.DataFrame(xyz, name="Stats",show_index=False)
+        return df_widget
+
     def win_rate_by_breed():
         fig = plt.figure()
         sns.barplot(data=by_breed, x='breed_type', y='win_rate', order=['genesis','legendary', 'exclusive', 'elite', 'cross', 'pacer'])
@@ -154,7 +170,8 @@ def launch_dashboard(id):
                     pn.Column(avg_win_by_bloodline)),
               pn.Row(pn.Column(line_breed),
                     pn.Column(win_rate_by_breed),
-                    pn.Column(violin_price_by_breed))],
+                    pn.Column(violin_price_by_breed)),
+                    pn.Row(pn.Column(display_df))],
         accent_base_color="#88d8b0",
     )
     template.show()
