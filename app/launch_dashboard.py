@@ -114,15 +114,20 @@ def launch_dashboard(id):
     sidebar_horse_data_message = f"""
     # **{horse.name}**
     ## ***{horse.genotype}*** ***{horse.bloodline}*** ***{corrected_breed}***
-    * ### Win: *{"{0:.2f}".format(horse.win_rate)}%*
-    * ### Place: *{"{0:.2f}".format(horse.place_rate)}%*
-    * ### Show: *{"{0:.2f}".format(horse.show_rate)}%*
-    * ### Total Races: *{"{0:,}".format(horse.total_races)}*
-    * ### Free Win Rate: *{"{0:.2f}".format(horse.free_win_rate)}%*
-    * ### Paid Win Rate: *{"{0:.2f}".format(horse.paid_win_rate)}%*
+    
+    ### Racing Stats
+    
+    *  **Win:** {"{0:.2f}".format(horse.win_rate)}%
+    *  **Place:** {"{0:.2f}".format(horse.place_rate)}%
+    *  **Show:** {"{0:.2f}".format(horse.show_rate)}%
+    *  **Total Races:** {"{0:,}".format(horse.total_races)}
+    *  **Free Win Rate:** {"{0:.2f}".format(horse.free_win_rate)}%
+    *  **Paid Win Rate:** {"{0:.2f}".format(horse.paid_win_rate)}%
 
-    ### Expected Net Winnings / Race: ${horse_expected_winnings_per_race}
-    ### Expected Market Value: ${relative_value}
+    ### Financial Summary
+    
+    * **Expected Net Winnings / Race:** ${horse_expected_winnings_per_race}
+    * **Expected Market Value:** ${relative_value}
     """
     template = pn.template.FastListTemplate(
         title='ThoroughZED Analytics - Relative Valuation', logo='https://i.imgur.com/3rpZHfT.png', header_background='black', header_color='red', font='times', shadow=True,
