@@ -5,17 +5,17 @@ import warnings
 from app.model_predict import predict_horse_price
 from app.meta_data_query_and_loop_script import get_summary_horse_data
 from app.launch_dashboard import launch_dashboard
-import numpy as np
 import panel as pn
-import holoviews as hv
 pn.extension('tabulator')
 
 warnings.filterwarnings(action='ignore', category=UserWarning)
+warnings.filterwarnings(action='ignore', category=FutureWarning)
 
 color_words = [colored('Horse/NFT ID', 'green', attrs=['bold']),
                colored("'q'", 'red', attrs=['bold']),
                colored("> *** Not a valid input! ***", 'red', attrs=['blink']),
-               colored('(r)elative value', 'green'), colored('(i)ntrinsic value', 'green'),
+               colored('(r)elative value', 'green'),
+               colored('(i)ntrinsic value', 'green'),
                colored("'h'", 'red', attrs=['bold']),
                colored("> *** This horse has not been raced and cannot have a valuation run on its performance ***", 'red', attrs=['bold']),
                colored("> *** Not a valid Horse/NFT ID in ZED Run ***", 'red', attrs=['bold']),
@@ -25,8 +25,11 @@ color_words = [colored('Horse/NFT ID', 'green', attrs=['bold']),
                colored("Intrinsic Valuation", 'green', attrs=['bold']),
                colored("Relative Valuation", 'green', attrs=['bold']),
                colored("NOTE", 'red', attrs=['blink']),
-               colored("Thank you for using ThoroughZED!", 'blue', attrs=['bold']),
-               colored("listing price", 'green', attrs=['bold'])]
+               colored("Thank you for using ThoroughZED!", 'yellow', attrs=['bold']),
+               colored("listing price", 'green', attrs=['bold']),
+               colored('(d)ashboard', 'green'),
+               colored("> Loading...", 'yellow', attrs=['blink'])]
+
 valid = True
 
 
@@ -67,7 +70,7 @@ def check_id(id):
             help()
         else:
             print(f"\n{color_words[2]}\n")
-        id = input(f"> Please enter the Horse/NFT ID for the horse you'd like to evaluate. Or type {color_words[1]} to quit or {color_words[5]} for help. ")
+        id = input(f"> Please enter the {color_words[0]} for the horse you'd like to evaluate. Or type {color_words[1]} to quit or {color_words[5]} for help. ")
     return id
 
 
@@ -77,10 +80,10 @@ def check_valid_horse(id):
         horse_object = get_summary_horse_data(int(id))
         if horse_object['data.horse.race_statistic.number_of_races'][0] == 0:
             print(f"\n{color_words[6]}\n")
-            answer = input(f"> Would you like to run a relative valuation on this horse? Type {color_words[8]} for yes or {color_words[9]} for no. ")
+            answer = input(f"> Would you like to display the dashboard for this horse? Type {color_words[8]} for yes or {color_words[9]} for no. ")
             while answer.lower() != "y" and answer.lower() != "n":
                 print(f"\n{color_words[2]}\n")
-                answer = input(f"> Would you like to run a relative valuation on this horse? Type {color_words[8]} for yes or {color_words[9]} for no. ")
+                answer = input(f"> Would you like to display the dashboard for this horse?  Type {color_words[8]} for yes or {color_words[9]} for no. ")
             if answer.lower() == "n":
                 return "start-over"
             if answer.lower() == "y":
@@ -97,7 +100,7 @@ def check_choice(choice):
     if choice.lower() == "q":
         print(f"\n> {color_words[14]}\n")
         return "exit"
-    while choice.lower() != "r" and choice.lower() != "i":
+    while choice.lower() != "r" and choice.lower() != "i" and choice.lower() != "d":
         if choice.lower() == "q":
             print(f"\n> {color_words[14]}\n")
             return "exit"
@@ -105,7 +108,7 @@ def check_choice(choice):
             help()
         else:
             print(f"\n{color_words[2]}\n")
-        choice = input(f"> Would you like to find the {color_words[3]} or {color_words[4]}? Or type {color_words[1]} to quit or {color_words[5]} for help. ")
+        choice = input(f"> Would you like to find the {color_words[3]} or {color_words[4]} or display the {color_words[16]}? Type {color_words[1]} to quit or {color_words[5]} for help. ")
     return choice
 
 
@@ -124,18 +127,17 @@ def check_price(cost):
 
 
 def relative(id):
+    print(f"\n{color_words[17]}\n")
     result = predict_horse_price(int(id))
     if float(result) >= 0:
         print('\n> Relative Value: ', colored(f'${result}', 'green'), '\n')
     else:
         print('\n> Relative Value: ', colored(f'${result}', 'red'), '\n')
-    answer = input(f"> Would you like to display the dashboard? Type {color_words[8]} for yes or {color_words[9]} for no. ")
-    while answer.lower() != 'y' and answer.lower() != 'n':
-        print(f"\n{color_words[2]}\n")
-        answer = input(f"> Would you like to display the dashboard? Type {color_words[8]} for yes or {color_words[9]} for no. ")
-    if answer.lower() == 'y':
-        print(f"\n{color_words[10]}\n")
-        launch_dashboard(int(id))
+
+
+def display_dashboard(id):
+    print(f"\n{color_words[10]}\n")
+    launch_dashboard(int(id))
 
 
 def intrinsic(id, cost):
@@ -165,20 +167,22 @@ def run_cli():
         exit()
     if id != "start-over":
         if not valid:
-            relative(id)
+            display_dashboard(id)
         else:
-            choice = input(f"> Would you like to find the {color_words[3]} or {color_words[4]}? Or type {color_words[1]} to quit or {color_words[5]} for help. ")
+            choice = input(f"> Would you like to find the {color_words[3]} or {color_words[4]} or display the {color_words[16]}? Type {color_words[1]} to quit or {color_words[5]} for help. ")
             choice = check_choice(choice)
             if choice == "exit":
                 exit()
-            if choice == "r":
+            if choice.lower() == "r":
                 relative(id)
-            if choice == "i":
+            if choice.lower() == "i":
                 cost = input(f"> Enter the {color_words[15]} of the horse in USD. Or type {color_words[1]} to quit. ")
                 cost = check_price(cost)
                 if cost == "exit":
                     exit()
                 intrinsic(id, cost)
+            if choice.lower() == "d":
+                display_dashboard(id)
 
 
 if __name__ == "__main__":
