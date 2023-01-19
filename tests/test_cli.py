@@ -1,5 +1,6 @@
 import pytest
 from app.thoroughzed_cli import run_cli
+from app.meta_data_query_and_loop_script import get_summary_horse_data
 from io import StringIO
 
 
