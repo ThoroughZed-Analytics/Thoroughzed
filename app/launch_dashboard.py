@@ -68,13 +68,18 @@ def launch_dashboard(id):
         return fig
 
     def line_breed():
-        fig = plt.figure()
-        sns.lineplot(data=breed_daily, x='day_sold', y='converted_price', hue='breed_type', hue_order=['genesis','legendary', 'exclusive', 'elite', 'cross', 'pacer'])
+        fig, ax = plt.subplots()
+        sns.lineplot(data=breed_daily, x='day_sold', y='converted_price', hue='breed_type', hue_order=['genesis', 'legendary', 'exclusive', 'elite', 'cross', 'pacer'])
         plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True, prune='both'))
         plt.xticks(rotation=20)
         plt.xlabel('Date')
         plt.ylabel('Sale Price (USD)')
         plt.title('Sale Price by Breed Over Time')
+        handles, labels = ax.get_legend_handles_labels()
+        for handle in handles:
+            handle.set_linewidth(2.0)
+            handle.set_linestyle("-")
+        plt.legend(title='Breed', handles=handles, labels=['Genesis', 'Legendary', 'Exclusive', 'Elite', 'Cross', 'Pacer'])
         return fig
 
     ##############################################################################
@@ -90,14 +95,23 @@ def launch_dashboard(id):
         return fig
 
     def line_blood():
-        fig = plt.figure()
-
+        fig, ax = plt.subplots()
         sns.lineplot(data=daily, x='day_sold', y='converted_price', hue='bloodline', hue_order=['Nakamoto', 'Szabo', 'Finney', 'Buterin'])
         plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True, prune='both'))
         plt.xticks(rotation=20)
         plt.xlabel('Date')
         plt.ylabel('Sale Price (USD)')
         plt.title('Sale Price by Bloodline Over Time')
+        plt.legend(title='Bloodline', labels=['Nakamoto', 'Szabo', 'Finney', 'Buterin'])
+        colors = ['blue', 'orange', 'green', 'red']
+        count = 0
+        leg = ax.get_legend()
+        handles, labels = ax.get_legend_handles_labels()
+        for handle in handles:
+            handle.set_linewidth(2.0)
+            handle.set_linestyle("-")
+            leg.legendHandles[count].set_color(colors[count])
+        plt.legend(title='Bloodline', handles=handles, labels=labels)
         return fig
 
     ###############################################################################
