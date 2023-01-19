@@ -28,4 +28,4 @@ def get_intrinsic_value(id, horse_cost):
 
 
 if __name__ == '__main__':
-    print(get_intrinsic_value(8919, 1000))
+    print(get_intrinsic_value(0, 100))
