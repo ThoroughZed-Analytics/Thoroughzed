@@ -76,12 +76,20 @@ def launch_dashboard(id):
     ###############################################################################
 
     # DASHBOARD RENDERING
-
+    sidebar_horse_data_message = f"""
+    ## {horse.name}
+    ### {horse.genotype} {horse.bloodline} {horse.breed}
+    ### Win: {"{0:.2f}".format(horse.win_rate)}%
+    ### Place: {"{0:.2f}".format(horse.place_rate)}%
+    ### Show: {"{0:.2f}".format(horse.show_rate)}%
+    ### Total Races: {"{0:,}".format(horse.total_races)}
+    ### Free Win Rate: {"{0:.2f}".format(horse.free_win_rate)}%
+    ### Paid Win Rate: {"{0:.2f}".format(horse.paid_win_rate)}%
+    """
     template = pn.template.FastListTemplate(
         title='ThoroughZED Analytics - Relative Valuation', logo='https://files.slack.com/files-pri/T039KG69K-F04KLAMQJJU/image.png', header_background='black', header_color='red', font='times', shadow=True,
         sidebar=[pn.pane.Markdown("## Horse Data"),
-                 pn.pane.Markdown(
-                     "#### Carbon dioxide emissions are the primary driver of global climate change. It’s widely recognised that to avoid the worst impacts of climate change, the world needs to urgently reduce emissions. But, how this responsibility is shared between regions, countries, and individuals has been an endless point of contention in international discussions."),
+                 pn.pane.Markdown(sidebar_horse_data_message),
                  pn.pane.PNG(horse.img_url, sizing_mode='scale_both'),
                  pn.pane.Markdown("## Settings")],
         main=[pn.Row(pn.Column(barchart_median_win_by_blood),
