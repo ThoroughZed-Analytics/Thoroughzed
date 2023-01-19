@@ -1,7 +1,7 @@
 from app.get_intrinsic_value import get_intrinsic_value
 from termcolor import colored
 from assets.art import art
-from app.get_relative_value import get_relative_value
+import warnings
 from app.model_predict import predict_horse_price
 from app.meta_data_query_and_loop_script import get_summary_horse_data
 from app.launch_dashboard import launch_dashboard
@@ -10,6 +10,7 @@ import panel as pn
 import holoviews as hv
 pn.extension('tabulator')
 
+warnings.filterwarnings(action='ignore', category=UserWarning)
 
 color_words = [colored('Horse/NFT ID', 'green', attrs=['bold']),
                colored("'q'", 'red', attrs=['bold']),
