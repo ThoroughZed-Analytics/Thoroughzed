@@ -49,14 +49,16 @@ def launch_dashboard(id):
         abc = market_data_no_outliers.loc[market_data_no_outliers['breed_type'] == horse.breed]
         abc = market_data_no_outliers.loc[market_data_no_outliers['bloodline'] == horse.bloodline]
 
-        above_average_abc = abc.loc[abc['converted_price'] > abc['converted_price'].mean() + abc['converted_price'].std()]
-        below_average_abc = abc.loc[abc['converted_price'] < abc['converted_price'].mean()]
+        ten_price_percentile,twentyfive_price_percentile,fifty_price_percentile,seventyfive_price_percentile,ninty_price_percentile = np.percentile(abc['converted_price'],[10,25,50,75,90])
+        avg_percentile,avg_first,avg_races,avg_winnings,avg_price = 'Average',abc['win_rate'].mean(),abc['overall.races'].mean(),abc['total_paid'].mean(),abc['converted_price'].mean()
+        ten_price_percentile,twentyfive_price_percentile,fifty_price_percentile,seventyfive_price_percentile,ninty_price_percentile = np.percentile(abc['converted_price'],[10,25,50,75,90])
+        ten_wins_percentile,twentyfive_wins_percentile,fifty_wins_percentile,seventyfive_wins_percentile,ninty_wins_percentile = np.percentile(abc['win_rate'],[10,25,50,75,90])
+        ten_races_percentile,twentyfive_races_percentile,fifty_races_percentile,seventyfive_races_percentile,ninty_races_percentile = np.percentile(abc['overall.races'],[10,25,50,75,90])
+        ten_totalETH_percentile,twentyfive_totalETH_percentile,fifty_totalETH_percentile,seventyfive_totalETH_percentile,ninty_totalETH_percentile = np.percentile(abc['total_paid'],[10,25,50,75,90])
+        ten_name_percentile,twentyfive_name_percentile,fifty_name_percentile,seventyfive_name_percentile,ninty_name_percentile = ['10th Percentile','25th Percentile','50th Percentile','75th Percentile','90th Percentile']
 
-        avg_percentile,avg_wins,avg_races,avg_winnings,avg_price = 'Average',abc['win_rate'].mean(),abc['overall.races'].mean(),abc['total_paid'].mean(),abc['converted_price'].mean()
-        above_avg_percentile,above_avg_wins,above_avg_races,above_avg_winnings,above_avg_price ='Above Average', above_average_abc['win_rate'].mean(),above_average_abc['overall.races'].mean(),above_average_abc['total_paid'].mean(),above_average_abc['converted_price'].mean()
-        below_avg_percentile,below_avg_wins,below_avg_races,below_avg_winnings,below_avg_price = 'Below Average',below_average_abc['win_rate'].mean(),below_average_abc['overall.races'].mean(),below_average_abc['total_paid'].mean(),below_average_abc['converted_price'].mean()
-        data = [[below_avg_percentile,below_avg_wins,below_avg_races,below_avg_winnings,below_avg_price],[avg_percentile,avg_wins, avg_races, avg_winnings, avg_price],[above_avg_percentile,above_avg_wins,above_avg_races,above_avg_winnings,above_avg_price]]
-        xyz = pd.DataFrame(data,columns=['Range','Win Rate (%)','Number of Races', 'Amount Won(Eth)', 'Price(USD)'])
+        data = [[avg_percentile,avg_first, avg_races, avg_winnings, avg_price],[ten_name_percentile,ten_wins_percentile,ten_races_percentile,ten_totalETH_percentile,ten_price_percentile],[twentyfive_name_percentile,twentyfive_wins_percentile,twentyfive_races_percentile, twentyfive_totalETH_percentile,twentyfive_price_percentile],[fifty_name_percentile,fifty_wins_percentile,fifty_races_percentile,fifty_totalETH_percentile,fifty_price_percentile],[seventyfive_name_percentile,seventyfive_wins_percentile,seventyfive_races_percentile,seventyfive_totalETH_percentile,seventyfive_price_percentile],[ninty_name_percentile,ninty_wins_percentile,ninty_races_percentile,ninty_totalETH_percentile,ninty_price_percentile]]
+        xyz = pd.DataFrame(data,columns=['Percentile','Win Rate','Number of Races', 'Amount Won', 'Price'])
         xyz = xyz.round(2)
         df_widget = pn.widgets.DataFrame(xyz, name="Stats",show_index=False)
         return df_widget
