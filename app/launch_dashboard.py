@@ -80,24 +80,24 @@ def launch_dashboard(id):
     ###############################################################################
 
     # DASHBOARD RENDERING
+
+    corrected_breed = horse.breed.capitalize()
+
     sidebar_horse_data_message = f"""
-    ## {horse.name}
-    ### {horse.genotype} {horse.bloodline} {horse.breed}
-    ### Win: {"{0:.2f}".format(horse.win_rate)}%
-    ### Place: {"{0:.2f}".format(horse.place_rate)}%
-    ### Show: {"{0:.2f}".format(horse.show_rate)}%
-    ### Total Races: {"{0:,}".format(horse.total_races)}
-    ### Free Win Rate: {"{0:.2f}".format(horse.free_win_rate)}%
-    ### Paid Win Rate: {"{0:.2f}".format(horse.paid_win_rate)}%
+    # **{horse.name}**
+    ## ***{horse.genotype}*** ***{horse.bloodline}*** ***{corrected_breed}***
+    * ## Win: *{"{0:.2f}".format(horse.win_rate)}%*
+    * ## Place: *{"{0:.2f}".format(horse.place_rate)}%*
+    * ## Show: *{"{0:.2f}".format(horse.show_rate)}%*
+    * ## Total Races: *{"{0:,}".format(horse.total_races)}*
+    * ## Free Win Rate: *{"{0:.2f}".format(horse.free_win_rate)}%*
+    * ## Paid Win Rate: *{"{0:.2f}".format(horse.paid_win_rate)}%*
     """
     template = pn.template.FastListTemplate(
         title='ThoroughZED Analytics - Relative Valuation', logo='https://i.imgur.com/3rpZHfT.png', header_background='black', header_color='red', font='times', shadow=True,
-        sidebar=[pn.pane.Markdown("## Horse Data"),
-                 pn.pane.Markdown(sidebar_horse_data_message),
-                 pn.pane.PNG(horse.img_url, sizing_mode='scale_both'),
-                 pn.pane.Markdown("## Settings")],
-        main=[pn.Row(pn.Column(rate_by_breed),
-                     barchart_avg_win_num_by_breed)],
+        sidebar=[pn.pane.Markdown(sidebar_horse_data_message),
+                 pn.pane.PNG(horse.img_url, sizing_mode='scale_both')],
+        main=[pn.Row(pn.Column(rate_by_breed))],
         accent_base_color="#88d8b0",
     )
     template.show()
