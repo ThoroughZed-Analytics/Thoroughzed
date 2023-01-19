@@ -38,21 +38,14 @@ def predict_horse_price(horse):
     y = clean_market_data.converted_price
 
     # Define the model
-    # model = LinearRegression()
     regr = RandomForestRegressor(random_state=0)
-
-    # model.set_params(**{'fit_intercept': True, 'positive': False})
 
     # set up model train and test splits
     X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=156, test_size=0.2, shuffle=True)
 
-    # fit model using LassoCV for feature selection
-    # Create an instance of LassoCV
-    # lasso = LassoCV(cv=5)
-
-    # Fit the LassoCV model to the data
-    # lasso.fit(X_train, y_train)
+    # Fit the RFR model to the data
     regr.fit(X_train, y_train)
+
     # make a call to horse data api
     horse_id = horse
 
@@ -66,7 +59,7 @@ def predict_horse_price(horse):
     # set up categories to filter metadata to what we need
     categories = ['free_win_rate', 'paid_win_rate', 'place','total_paid', 'win_rate', 'overall.first', 'overall.races', 'overall.second', 'overall.third']
 
-    horse_to_predict = horse_to_predict.filter(categories)
+    horse_to_predict = horse_to_predict.filter(categories).iloc[0]
     horse_to_predict = horse_to_predict.values.reshape(1,-1)
     prediction_test = regr.predict(horse_to_predict)
     return "{:.2f}".format(prediction_test[0])
