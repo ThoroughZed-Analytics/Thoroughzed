@@ -45,26 +45,26 @@ def launch_dashboard(id):
 
     def win_rate_by_breed():
         fig = plt.figure()
-        sns.barplot(data=by_breed, x='breed_type', y='win_rate')
+        sns.barplot(data=by_breed, x='breed_type', y='win_rate', order=['genesis','legendary', 'exclusive', 'elite', 'cross', 'pacer'])
         plt.title('Mean Win Rate by Breed Type')
         return fig
 
     def avg_win_by_bloodline():
         fig = plt.figure()
-        sns.barplot(data=by_blood, x='bloodline', y='overall.first')
+        sns.barplot(data=by_blood, x='bloodline', y='overall.first', order=['Nakamoto', 'Szabo', 'Finney', 'Buterin'])
         plt.title('Mean number of first place finishes')
         return fig
 
     def violin_price_by_breed():
         fig = plt.figure()
-        sns.violinplot(data=market_data_no_outliers, x='breed_type', y='converted_price')
+        sns.violinplot(data=market_data_no_outliers, x='breed_type', y='converted_price', order=['genesis','legendary', 'exclusive', 'elite', 'cross', 'pacer'])
         plt.title('price by breed')
         return fig
         
 
     def lineplot_sale_breed_time():
         fig = plt.figure()
-        sns.lineplot(data=breed_daily, x='day_sold', y='converted_price', hue='breed_type')
+        sns.lineplot(data=breed_daily, x='day_sold', y='converted_price', hue='breed_type', hue_order=['genesis','legendary', 'exclusive', 'elite', 'cross', 'pacer'])
         plt.title('Sale Price Breed Time')
         return fig
 
@@ -75,13 +75,13 @@ def launch_dashboard(id):
 
     def barchart_median_win_by_blood():
         fig = plt.figure()
-        sns.barplot(data=by_blood, x='bloodline', y='win_rate')
+        sns.barplot(data=by_blood, x='bloodline', y='win_rate', order=['Nakamoto', 'Szabo', 'Finney', 'Buterin'])
         plt.title('Median win by bloodline')
         return fig
 
     def lineplot_price_blood_time():
         fig = plt.figure()
-        sns.lineplot(data=daily, x='day_sold', y='converted_price', hue='bloodline')
+        sns.lineplot(data=daily, x='day_sold', y='converted_price', hue='bloodline', hue_order=['Nakamoto', 'Szabo', 'Finney', 'Buterin'])
         plt.title('price by blood over time')
         return fig
 
