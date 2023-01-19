@@ -2,6 +2,7 @@ from app.get_intrinsic_value import get_intrinsic_value
 from termcolor import colored
 from assets.art import art
 from app.get_relative_value import get_relative_value
+from app.model_predict import predict_horse_price
 from app.meta_data_query_and_loop_script import get_summary_horse_data
 import numpy as np
 import panel as pn
@@ -116,43 +117,47 @@ def check_price(cost):
 
 
 def relative(id):
+    result = predict_horse_price(int(id))
+    print(f"\n> Result: {result}\n")
+    answer = input(f"> Would you like to display the dashboard? Type {color_words[8]} for yes or {color_words[9]} for no. ")
+    while answer.lower() != 'y' and answer.lower() != 'n':
+        print(f"\n{color_words[2]}\n")
+        answer = input(f"> Would you like to display the dashboard? Type {color_words[8]} for yes or {color_words[9]} for no. ")
+    if answer.lower() == 'y':
+        print(f"\n{color_words[10]}\n")
 
-    # This function needs to be completed once we have a python file with the completed relative valuation
+        def open_dash():
+            ACCENT_COLOR = pn.template.FastGridTemplate.accent_base_color
+            XS = np.linspace(0, np.pi)
 
-    print(f"\n{color_words[10]}\n")
+            def sine(freq, phase):
+                return hv.Curve((XS, np.sin(XS * freq + phase))).opts(
+                    responsive=True, min_height=400, title="Sine", color=ACCENT_COLOR
+                ).opts(line_width=6)
 
-    def open_dash():
-        ACCENT_COLOR = pn.template.FastGridTemplate.accent_base_color
-        XS = np.linspace(0, np.pi)
+            def cosine(freq, phase):
+                return hv.Curve((XS, np.cos(XS * freq + phase))).opts(
+                    responsive=True, min_height=400, title="Cosine", color=ACCENT_COLOR
+                ).opts(line_width=6)
 
-        def sine(freq, phase):
-            return hv.Curve((XS, np.sin(XS * freq + phase))).opts(
-                responsive=True, min_height=400, title="Sine", color=ACCENT_COLOR
-            ).opts(line_width=6)
+            freq = pn.widgets.FloatSlider(name="Frequency", start=0, end=10, value=2)
+            phase = pn.widgets.FloatSlider(name="Phase", start=0, end=np.pi)
 
-        def cosine(freq, phase):
-            return hv.Curve((XS, np.cos(XS * freq + phase))).opts(
-                responsive=True, min_height=400, title="Cosine", color=ACCENT_COLOR
-            ).opts(line_width=6)
+            sine = pn.bind(sine, freq=freq, phase=phase)
+            cosine = pn.bind(cosine, freq=freq, phase=phase)
 
-        freq = pn.widgets.FloatSlider(name="Frequency", start=0, end=10, value=2)
-        phase = pn.widgets.FloatSlider(name="Phase", start=0, end=np.pi)
+            template = pn.template.FastGridTemplate(
+                site="ThoroughZED Analytics", title="Relative Valuation Dashboard",
+                header_color='red', header_background='black', theme='dark',
+                main_layout='card',
+                sidebar=[pn.pane.Markdown("## Settings"), freq, phase],
+            )
 
-        sine = pn.bind(sine, freq=freq, phase=phase)
-        cosine = pn.bind(cosine, freq=freq, phase=phase)
+            template.main[:3, :6] = pn.pane.HoloViews(hv.DynamicMap(sine), sizing_mode="stretch_both")
+            template.main[:3, 6:] = pn.pane.HoloViews(hv.DynamicMap(cosine), sizing_mode="stretch_both")
+            template.show()
 
-        template = pn.template.FastGridTemplate(
-            site="ThoroughZED Analytics", title="Relative Valuation Dashboard",
-            header_color='red', header_background='black', theme='dark',
-            main_layout='card',
-            sidebar=[pn.pane.Markdown("## Settings"), freq, phase],
-        )
-
-        template.main[:3, :6] = pn.pane.HoloViews(hv.DynamicMap(sine), sizing_mode="stretch_both")
-        template.main[:3, 6:] = pn.pane.HoloViews(hv.DynamicMap(cosine), sizing_mode="stretch_both")
-        template.show()
-
-    open_dash()
+        open_dash()
 
 
 def intrinsic(id, cost):

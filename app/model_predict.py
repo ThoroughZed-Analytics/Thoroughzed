@@ -2,7 +2,8 @@ import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LassoCV
-from meta_data_query_and_loop_script import get_horse_data
+from app.meta_data_query_and_loop_script import get_horse_data
+import ssl
 
 
 def predict_horse_price(horse):
@@ -12,11 +13,18 @@ def predict_horse_price(horse):
     :return:
     '''
 
+    try:
+        _create_unverified_https_context = ssl._create_unverified_context
+    except AttributeError:
+        pass
+    else:
+        ssl._create_default_https_context = _create_unverified_https_context
+
     if type(horse) != int:
         raise ValueError('Please input an integer')
 
     # import data
-    clean_market_data = pd.read_csv('master_db_no_outliers.csv')
+    clean_market_data = pd.read_csv('https://raw.githubusercontent.com/ThoroughZed-Analytics/Thoroughzed/dev/app/master_db_no_outliers.csv')
 
     # drop rows where price is NA
     clean_market_data = clean_market_data[~pd.isna(clean_market_data['converted_price'])]
