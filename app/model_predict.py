@@ -1,7 +1,5 @@
 import pandas as pd
-from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LassoCV
 from sklearn.ensemble import RandomForestRegressor
 from app.meta_data_query_and_loop_script import get_horse_data
 import ssl
@@ -57,7 +55,7 @@ def predict_horse_price(horse):
         horse_to_predict = get_horse_data(horse_id)
 
     # set up categories to filter metadata to what we need
-    categories = ['free_win_rate', 'paid_win_rate', 'place','total_paid', 'win_rate', 'overall.first', 'overall.races', 'overall.second', 'overall.third']
+    categories = ['free_win_rate', 'paid_win_rate', 'place', 'total_paid', 'win_rate', 'overall.first', 'overall.races', 'overall.second', 'overall.third']
 
     horse_to_predict = horse_to_predict.filter(categories).iloc[0]
     horse_to_predict = horse_to_predict.values.reshape(1,-1)

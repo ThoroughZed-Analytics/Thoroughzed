@@ -45,7 +45,7 @@ def launch_dashboard(id):
 
     def win_rate_by_breed():
         fig = plt.figure()
-        sns.barplot(data=by_breed, x='breed_type', y='win_rate')
+        sns.barplot(data=by_breed, x='breed_type', y='win_rate', order=['genesis','legendary', 'exclusive', 'elite', 'cross', 'pacer'])
         plt.xlabel('Breed')
         plt.ylabel('Win Rate (%)')
         plt.title('Mean Win Rate by Breed')
@@ -53,15 +53,15 @@ def launch_dashboard(id):
 
     def avg_win_by_bloodline():
         fig = plt.figure()
-        sns.barplot(data=by_blood, x='bloodline', y='overall.first')
-        plt.xlabel('Blood Line')
+        sns.barplot(data=by_blood, x='bloodline', y='overall.first', order=['Nakamoto', 'Szabo', 'Finney', 'Buterin'])
+        plt.xlabel('Bloodline')
         plt.ylabel('Mean Number of Wins')
-        plt.title('Mean Number of Wins by Blood Line')
+        plt.title('Mean Number of Wins by Bloodline')
         return fig
 
     def violin_price_by_breed():
         fig = plt.figure()
-        sns.violinplot(data=market_data_no_outliers, x='breed_type', y='converted_price')
+        sns.violinplot(data=market_data_no_outliers, x='breed_type', y='converted_price', order=['genesis','legendary', 'exclusive', 'elite', 'cross', 'pacer'])
         plt.xlabel('Breed')
         plt.ylabel('Sale Price (USD)')
         plt.title('Sales Price by Breed')
@@ -69,10 +69,9 @@ def launch_dashboard(id):
 
     def line_breed():
         fig = plt.figure()
-        sns.lineplot(data=breed_daily, x='day_sold', y='converted_price', hue='breed_type')
+        sns.lineplot(data=breed_daily, x='day_sold', y='converted_price', hue='breed_type', hue_order=['genesis','legendary', 'exclusive', 'elite', 'cross', 'pacer'])
         plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True, prune='both'))
         plt.xticks(rotation=20)
-        # fig.set(xlabel=None)
         plt.xlabel('Date')
         plt.ylabel('Sale Price (USD)')
         plt.title('Sale Price by Breed Over Time')
@@ -84,21 +83,21 @@ def launch_dashboard(id):
 
     def barchart_median_win_by_blood():
         fig = plt.figure()
-        sns.barplot(data=by_blood, x='bloodline', y='win_rate')
-        plt.xlabel('Blood Line')
+        sns.barplot(data=by_blood, x='bloodline', y='win_rate', order=['Nakamoto', 'Szabo', 'Finney', 'Buterin'])
+        plt.xlabel('Bloodline')
         plt.ylabel('Win Rate (%)')
-        plt.title('Median Win Rate by Blood Line')
+        plt.title('Median Win Rate by Bloodline')
         return fig
 
     def line_blood():
         fig = plt.figure()
-        sns.lineplot(data=daily, x='day_sold', y='converted_price', hue='bloodline')
+
+        sns.lineplot(data=daily, x='day_sold', y='converted_price', hue='bloodline', hue_order=['Nakamoto', 'Szabo', 'Finney', 'Buterin'])
         plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True, prune='both'))
         plt.xticks(rotation=20)
-        # fig.set(xlabel=None)
         plt.xlabel('Date')
         plt.ylabel('Sale Price (USD)')
-        plt.title('Sale Price by Blood Line Over Time')
+        plt.title('Sale Price by Bloodline Over Time')
         return fig
 
     ###############################################################################
