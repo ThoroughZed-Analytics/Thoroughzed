@@ -1,7 +1,7 @@
 from app.get_intrinsic_value import get_intrinsic_value
 from termcolor import colored
 from assets.art import art
-from app.get_relative_value import get_relative_value
+import warnings
 from app.model_predict import predict_horse_price
 from app.meta_data_query_and_loop_script import get_summary_horse_data
 import numpy as np
@@ -9,6 +9,7 @@ import panel as pn
 import holoviews as hv
 pn.extension('tabulator')
 
+warnings.filterwarnings(action='ignore', category=UserWarning)
 
 color_words = [colored('Horse/NFT ID', 'green', attrs=['bold']),
                colored("'q'", 'red', attrs=['bold']),
@@ -118,7 +119,7 @@ def check_price(cost):
 
 def relative(id):
     result = predict_horse_price(int(id))
-    print(f"\n> Result: {result}\n")
+    print(colored(f"\n> Predicted Value: ${round(result[0], 2)}\n", 'green'))
     answer = input(f"> Would you like to display the dashboard? Type {color_words[8]} for yes or {color_words[9]} for no. ")
     while answer.lower() != 'y' and answer.lower() != 'n':
         print(f"\n{color_words[2]}\n")
