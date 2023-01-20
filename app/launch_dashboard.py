@@ -81,7 +81,7 @@ def launch_dashboard(id):
         xyz = pd.DataFrame(data,columns=['Percentile','Win Rate','Number of Races', 'Gross Winnings', 'Sale Price'])
         xyz.style.set_properties(**{'text-align': 'right'})
 
-        df_widget = pn.widgets.DataFrame(xyz, name="Stats",show_index=False)
+        df_widget = pn.widgets.DataFrame(xyz, name="Stats",show_index=False, width=900)
         return df_widget
 
     def win_rate_by_breed():
@@ -113,6 +113,7 @@ def launch_dashboard(id):
             handle.set_linewidth(2.0)
             handle.set_linestyle("-")
         plt.legend(title='Breed', handles=handles, labels=['Genesis', 'Legendary', 'Exclusive', 'Elite', 'Cross', 'Pacer'])
+        fig.set_size_inches(13,6)
         return fig
 
     ##############################################################################
@@ -124,7 +125,7 @@ def launch_dashboard(id):
         sns.barplot(data=by_blood, x='bloodline', y='win_rate', order=['Nakamoto', 'Szabo', 'Finney', 'Buterin'])
         plt.xlabel('Bloodline')
         plt.ylabel('Win Rate (%)')
-        plt.title('Median Win Rate by Bloodline')
+        plt.title('Mean Win Rate by Bloodline')
         return fig
 
     def line_blood():
@@ -145,6 +146,7 @@ def launch_dashboard(id):
             handle.set_linestyle("-")
             leg.legendHandles[count].set_color(colors[count])
         plt.legend(title='Bloodline', handles=handles, labels=labels)
+        fig.set_size_inches(13,6)
         return fig
 
     ###############################################################################
@@ -182,12 +184,11 @@ def launch_dashboard(id):
         title='ThoroughZED Analytics', logo='https://i.imgur.com/3rpZHfT.png', header_background='#09a59f', header_color='black', font='times', shadow=True, corner_radius=20, favicon='https://i.imgur.com/3rpZHfT.png', theme_toggle=False, busy_indicator=None,
         sidebar=[pn.pane.Markdown(sidebar_horse_data_message),
                  pn.pane.PNG(horse.img_url, sizing_mode='scale_both')],
-        main=[pn.Row(pn.Column(line_blood),
-                    pn.Column(barchart_median_win_by_blood),
-                    pn.Column(avg_win_by_bloodline)),
+        main=[pn.Row(pn.Column(display_df)),
+            pn.Row(pn.Row(pn.Column(line_blood),
+                    pn.Column(barchart_median_win_by_blood))),
               pn.Row(pn.Column(line_breed),
-                    pn.Column(win_rate_by_breed)),
-                    pn.Row(pn.Column(display_df))],
+                    pn.Column(win_rate_by_breed))],
         accent_base_color="#88d8b0",
     )
     template.show()
