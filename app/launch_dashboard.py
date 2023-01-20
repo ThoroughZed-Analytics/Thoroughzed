@@ -175,6 +175,7 @@ def launch_dashboard(id):
 
     ### Financial Summary
     
+    * **Total Winnings:** {"{0:.4f}".format(horse.total_winnings)} ETH 
     * **Expected Net Winnings / Race:** {horse_expected_winnings_per_race}
     * **Expected Market Value:** {relative_value}
     """
