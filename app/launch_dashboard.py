@@ -47,12 +47,63 @@ def launch_dashboard(id):
 
     ################################################################################
 
+    # SIDEBAR DATA
+
+    corrected_breed = horse.breed.capitalize()
+    if horse.total_races != 0:
+        intrinsic_value_lookup_result = get_intrinsic_value(int(horse.horse_id), 1)
+        horse_expected_winnings_per_race = f"${intrinsic_value_lookup_result[0]}"
+        relative_value = f"${predict_horse_price(int(horse.horse_id))}"
+
+    sidebar_horse_data_message = f"""
+        # **{horse.name}**
+        ## ***{horse.genotype}*** ***{horse.bloodline}*** ***{corrected_breed}***
+        """
+
+    slider_message = " #### **Listing Price in USD:**"
+
+    @interact(Price=(1, 1000))
+    def slider(Price):
+        if horse.total_races != 0:
+            races = get_intrinsic_value_no_api(int(id), Price, horse)[2]
+            yield_data = get_intrinsic_value_no_api(int(id), Price, horse)[1]
+            result = f"""
+            ### Financial Summary
+            * **Total Winnings:** {"{0:.4f}".format(horse.total_winnings)} ETH 
+            * **Expected Market Value:** {relative_value}
+            * **Expected Net Winnings / Race:** {horse_expected_winnings_per_race}
+            * **Potential 3-Month Yield:** {yield_data}%
+            * **Races to Cover Listing Price:** {"{0:,}".format(races)}
+            ### Racing Stats
+            * **Total Races:** {"{0:,}".format(horse.total_races)}
+            * **Win Rate:** {"{0:.2f}".format(horse.win_rate)}%
+                * **Free Win Rate:** {"{0:.2f}".format(horse.free_win_rate)}%
+                * **Paid Win Rate:** {"{0:.2f}".format(horse.paid_win_rate)}%
+            * **Place Rate:** {"{0:.2f}".format(horse.place_rate)}%
+            * **Show Rate:** {"{0:.2f}".format(horse.show_rate)}%
+            """
+            return result
+        else:
+            return f"""
+            ### Financial Summary
+            * **Total Winnings:** 0 ETH 
+            * **Expected Market Value:** N/A
+            * **Expected Net Winnings / Race:** N/A
+            * **Potential 3-Month Yield:** N/A
+            * **Races to Cover Listing Price:** N/A
+            ### Racing Stats
+            * **Total Races:** {"{0:,}".format(horse.total_races)}
+            * **Win Rate:** {"{0:.2f}".format(horse.win_rate)}%
+                * **Free Win Rate:** {"{0:.2f}".format(horse.free_win_rate)}%
+                * **Paid Win Rate:** {"{0:.2f}".format(horse.paid_win_rate)}%
+            * **Place Rate:** {"{0:.2f}".format(horse.place_rate)}%
+            * **Show Rate:** {"{0:.2f}".format(horse.show_rate)}%
+            """
+
+    ################################################################################
+
     # BREED GRAPHS
-    @interact(ListingPrice=(1,1000))
-    def slider(ListingPrice):
-        a,b,c = get_intrinsic_value_no_api(int(horse.horse_id), ListingPrice,horse)
-        c = str(c) + ' Races Needed'
-        return c
+
     def display_df():
         abc = market_data_no_outliers.loc[(market_data_no_outliers['breed_type'] == horse.breed) & (market_data_no_outliers['bloodline'] == horse.bloodline)]
         price_10p, price_25p, price_50p, price_75p, price_90p = np.percentile(abc['converted_price'], [10, 25, 50, 75, 90])
@@ -168,44 +219,18 @@ def launch_dashboard(id):
 
     # DASHBOARD RENDERING
 
-    corrected_breed = horse.breed.capitalize()
-    if horse.total_races == 0:
-        horse_expected_winnings_per_race = "N/A"
-        relative_value = "N/A"
-    else:
-        intrinsic_value_lookup_result = get_intrinsic_value(int(horse.horse_id), 1)
-        horse_expected_winnings_per_race = f"${intrinsic_value_lookup_result[0]}"
-        relative_value = f"${predict_horse_price(int(horse.horse_id))}"
-
-    sidebar_horse_data_message = f"""
-    # **{horse.name}**
-    ## ***{horse.genotype}*** ***{horse.bloodline}*** ***{corrected_breed}***
-    
-    ### Racing Stats
-    
-    *  **Win:** {"{0:.2f}".format(horse.win_rate)}%
-    *  **Place:** {"{0:.2f}".format(horse.place_rate)}%
-    *  **Show:** {"{0:.2f}".format(horse.show_rate)}%
-    *  **Total Races:** {"{0:,}".format(horse.total_races)}
-    *  **Free Win Rate:** {"{0:.2f}".format(horse.free_win_rate)}%
-    *  **Paid Win Rate:** {"{0:.2f}".format(horse.paid_win_rate)}%
-
-    ### Financial Summary
-    
-    * **Total Winnings:** {"{0:.4f}".format(horse.total_winnings)} ETH 
-    * **Expected Net Winnings / Race:** {horse_expected_winnings_per_race}
-    * **Expected Market Value:** {relative_value}
-    """
     template = pn.template.FastListTemplate(
         title='ThoroughZED Analytics', logo='https://i.imgur.com/3rpZHfT.png', header_background='#09a59f', header_color='black', font='times', shadow=True, corner_radius=20, favicon='https://i.imgur.com/3rpZHfT.png', theme_toggle=False, busy_indicator=None,
         sidebar=[pn.pane.Markdown(sidebar_horse_data_message),
-                 pn.Row(slider),
+                 pn.pane.Markdown(slider_message),
+                 pn.Column(slider),
                  pn.pane.PNG(horse.img_url, sizing_mode='scale_both')],
-        main=[pn.Row(pn.Column(display_df),(hv_line_breed)),
-                pn.Row(pn.Row(pn.Column(line_blood),
-                pn.Column(barchart_median_win_by_blood))),
-                pn.Row(pn.Column(line_breed),
-                pn.Column(win_rate_by_breed))],
+        main=[pn.Row(pn.Column(display_df),
+                     pn.Column(hv_line_breed)),
+              pn.Row(pn.Column(line_blood),
+                     pn.Column(barchart_median_win_by_blood)),
+              pn.Row(pn.Column(line_breed),
+                     pn.Column(win_rate_by_breed))],
         accent_base_color="#88d8b0",
     )
     template.show()
