@@ -15,6 +15,7 @@ import seaborn as sns
 import sklearn
 from matplotlib.ticker import MaxNLocator
 pn.extension('tabulator')
+from bokeh.models import DatetimeTickFormatter
 
 
 def launch_dashboard(id):
@@ -39,8 +40,8 @@ def launch_dashboard(id):
     market_data_no_outliers = pd.read_csv('https://raw.githubusercontent.com/ThoroughZed-Analytics/Thoroughzed/dev/app/master_db_no_outliers.csv')
 
     by_breed = market_data_no_outliers.groupby('breed_type').mean().reset_index()
-    breed_daily = market_data_no_outliers.groupby(['day_sold', 'breed_type']).mean()
-    breed_daily_df = market_data_no_outliers[['day_sold','breed_type','converted_price']]
+    breed_daily = market_data_no_outliers.groupby(['day_sold', 'breed_type']).mean().reset_index()
+    pd.to_datetime(breed_daily['day_sold'])
     by_blood = market_data_no_outliers.groupby('bloodline').median().reset_index()
     daily = market_data_no_outliers.groupby(['day_sold', 'bloodline']).mean()
 
@@ -107,15 +108,15 @@ def launch_dashboard(id):
         plt.title('Mean Number of Wins by Bloodline')
         return fig
 
-    # def hv_line_breed():
-    #     # return breed_daily.hvplot.line(x='day_sold',y=['converted_price','breed_type'], value_label='Sale Price(USD)')
-    #     list_of_plots = [hv.Curve(breed_daily_df.loc[breed_daily_df['breed_type']=='genesis'][['day_sold', 'converted_price']], label='Genesis'),
-    #         hv.Curve(breed_daily_df.loc[breed_daily_df['breed_type']=='legendary'][['day_sold', 'converted_price']], label='Legendary'),
-    #         hv.Curve(breed_daily_df.loc[breed_daily_df['breed_type']=='exclusive'][['day_sold', 'converted_price']], label='Exclusive'),
-    #         hv.Curve(breed_daily_df.loc[breed_daily_df['breed_type']=='elite'][['day_sold', 'converted_price']], label='Elite'),
-    #         hv.Curve(breed_daily_df.loc[breed_daily_df['breed_type']=='cross'][['day_sold', 'converted_price']], label='Cross'),
-    #         hv.Curve(breed_daily_df.loc[breed_daily_df['breed_type']=='pacer'][['day_sold', 'converted_price']], label='Pacer')]
-    #     return hv.Overlay(list_of_plots).opts(xlabel='Day Sold', ylabel='Price',title='HV line by breed', legend_position='right',width=1000, height=500)
+    def hv_line_breed():
+        list_of_plots = [hv.Curve(breed_daily.loc[breed_daily['breed_type']=='genesis'][['day_sold', 'converted_price']], label='Genesis'),
+            hv.Curve(breed_daily.loc[breed_daily['breed_type']=='legendary'][['day_sold', 'converted_price']], label='Legendary'),
+            hv.Curve(breed_daily.loc[breed_daily['breed_type']=='exclusive'][['day_sold', 'converted_price']], label='Exclusive'),
+            hv.Curve(breed_daily.loc[breed_daily['breed_type']=='elite'][['day_sold', 'converted_price']], label='Elite'),
+            hv.Curve(breed_daily.loc[breed_daily['breed_type']=='cross'][['day_sold', 'converted_price']], label='Cross'),
+            hv.Curve(breed_daily.loc[breed_daily['breed_type']=='pacer'][['day_sold', 'converted_price']], label='Pacer')]
+        return hv.Overlay(list_of_plots).opts(xlabel='Day Sold', ylabel='Price',title='HV line by breed', legend_position='right',width=1000, height=500, xformatter=DatetimeTickFormatter(days="%m/%d%Y",months="%m/%d%Y",hours="%m/%d%Y",minutes="%m/%d%Y"), xticks=10)
+
     def line_breed():
         fig, ax = plt.subplots()
         sns.lineplot(data=breed_daily, x='day_sold', y='converted_price', hue='breed_type', hue_order=['genesis', 'legendary', 'exclusive', 'elite', 'cross', 'pacer'])
@@ -201,7 +202,7 @@ def launch_dashboard(id):
         sidebar=[pn.pane.Markdown(sidebar_horse_data_message),
                  pn.Row(slider),
                  pn.pane.PNG(horse.img_url, sizing_mode='scale_both')],
-        main=[pn.Row(pn.Column(display_df)),
+        main=[pn.Row(pn.Column(display_df),(hv_line_breed)),
                 pn.Row(pn.Row(pn.Column(line_blood),
                 pn.Column(barchart_median_win_by_blood))),
                 pn.Row(pn.Column(line_breed),
