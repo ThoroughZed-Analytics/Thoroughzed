@@ -65,8 +65,8 @@ def launch_dashboard(id):
     @interact(Price=(1, 1000))
     def slider(Price):
         if horse.total_races != 0:
-            races = get_intrinsic_value_no_api(int(id), Price, horse)[2]
-            yield_data = get_intrinsic_value_no_api(int(id), Price, horse)[1]
+            races = get_intrinsic_value_no_api(Price, horse)[2]
+            yield_data = get_intrinsic_value_no_api(Price, horse)[1]
             result = f"""
             ### Financial Summary
             * **Total Winnings:** {"{0:.4f}".format(horse.total_winnings)} ETH 
@@ -149,14 +149,6 @@ def launch_dashboard(id):
         plt.title('Mean Win Rate by Breed')
         return fig
 
-    def avg_win_by_bloodline():
-        fig = plt.figure()
-        sns.barplot(data=by_blood, x='bloodline', y='overall.first', order=['Nakamoto', 'Szabo', 'Finney', 'Buterin'])
-        plt.xlabel('Bloodline')
-        plt.ylabel('Mean Number of Wins')
-        plt.title('Mean Number of Wins by Bloodline')
-        return fig
-
     def hv_line_breed():
         breed_daily['day_sold'] = pd.to_datetime(breed_daily['day_sold'])
         xformatter = DatetimeTickFormatter(days="%Y-%m-%d")
@@ -166,7 +158,7 @@ def launch_dashboard(id):
             hv.Curve(breed_daily.loc[breed_daily['breed_type']=='elite'][['day_sold', 'converted_price']], label='Elite'),
             hv.Curve(breed_daily.loc[breed_daily['breed_type']=='cross'][['day_sold', 'converted_price']], label='Cross'),
             hv.Curve(breed_daily.loc[breed_daily['breed_type']=='pacer'][['day_sold', 'converted_price']], label='Pacer')]
-        return hv.Overlay(list_of_plots).opts(xlabel='Day Sold', ylabel='Price',title='HV line by breed', legend_position='right',width=1000, height=500,xformatter=xformatter, xticks=10, xrotation=30)
+        return hv.Overlay(list_of_plots).opts(xlabel='Date', ylabel='Sale Price (USD)',title='Sale Price by Breed Over Time', legend_position='right',width=1000, height=500,xformatter=xformatter, xticks=10, xrotation=30)
 
     def line_breed():
         fig, ax = plt.subplots()
@@ -194,6 +186,14 @@ def launch_dashboard(id):
         plt.xlabel('Bloodline')
         plt.ylabel('Win Rate (%)')
         plt.title('Mean Win Rate by Bloodline')
+        return fig
+
+    def avg_win_by_bloodline():
+        fig = plt.figure()
+        sns.barplot(data=by_blood, x='bloodline', y='overall.first', order=['Nakamoto', 'Szabo', 'Finney', 'Buterin'])
+        plt.xlabel('Bloodline')
+        plt.ylabel('Mean Number of Wins')
+        plt.title('Mean Number of Wins by Bloodline')
         return fig
 
     def line_blood():
@@ -227,12 +227,11 @@ def launch_dashboard(id):
                  pn.pane.Markdown(slider_message),
                  pn.Column(slider),
                  pn.pane.PNG(horse.img_url, sizing_mode='scale_both')],
-        main=[pn.Row(pn.Column(display_df),
-                     pn.Column(hv_line_breed)),
+        main=[pn.Row(pn.Column(display_df)),
+              pn.Row(pn.Column(hv_line_breed),
+                     pn.Column(win_rate_by_breed)),
               pn.Row(pn.Column(line_blood),
-                     pn.Column(barchart_median_win_by_blood)),
-              pn.Row(pn.Column(line_breed),
-                     pn.Column(win_rate_by_breed))],
+                     pn.Column(avg_win_by_bloodline))],
         accent_base_color="#88d8b0",
     )
     template.show()
