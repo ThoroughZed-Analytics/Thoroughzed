@@ -80,6 +80,7 @@ def launch_dashboard(id):
         data = [[ten_p_name,ten_p_values[0], ten_p_values[1], ten_p_values[2], ten_p_values[3]],[twenty_five_p_name, twenty_five_p_values[0],twenty_five_p_values[1], twenty_five_p_values[2], twenty_five_p_values[3]],[median_name, median_values[0], median_values[1], median_values[2], median_values[3]], [average_name, avg_values[0], avg_values[1], avg_values[2], avg_values[3]], [seven_five_p_name, seven_five_p_values[0], seven_five_p_values[1], seven_five_p_values[2], seven_five_p_values[3]], [nine_zero_p_name, nine_zero_p_values[0], nine_zero_p_values[1], nine_zero_p_values[2], nine_zero_p_values[3]]]
         xyz = pd.DataFrame(data,columns=['Percentile','Win Rate','Number of Races', 'Gross Winnings', 'Sale Price'])
         xyz.style.set_properties(**{'text-align': 'right'})
+
         df_widget = pn.widgets.DataFrame(xyz, name="Stats",show_index=False)
         return df_widget
 
@@ -151,11 +152,11 @@ def launch_dashboard(id):
     # DASHBOARD RENDERING
 
     corrected_breed = horse.breed.capitalize()
-    intrinsic_value_lookup_result = get_intrinsic_value(int(horse.horse_id), 1)
     if horse.total_races == 0:
         horse_expected_winnings_per_race = "N/A"
         relative_value = "N/A"
     else:
+        intrinsic_value_lookup_result = get_intrinsic_value(int(horse.horse_id), 1)
         horse_expected_winnings_per_race = f"${intrinsic_value_lookup_result[0]}"
         relative_value = f"${predict_horse_price(int(horse.horse_id))}"
 
@@ -178,11 +179,9 @@ def launch_dashboard(id):
     * **Expected Market Value:** {relative_value}
     """
     template = pn.template.FastListTemplate(
-        title='ThoroughZED Analytics - Relative Valuation', logo='https://i.imgur.com/3rpZHfT.png', header_background='black', header_color='red', font='times', shadow=True,
+        title='ThoroughZED Analytics', logo='https://i.imgur.com/3rpZHfT.png', header_background='#09a59f', header_color='black', font='times', shadow=True, corner_radius=20, favicon='https://i.imgur.com/3rpZHfT.png', theme_toggle=False, busy_indicator=None,
         sidebar=[pn.pane.Markdown(sidebar_horse_data_message),
                  pn.pane.PNG(horse.img_url, sizing_mode='scale_both')],
-        # main=[pn.Row(pn.Column(win_rate_by_breed),(avg_win_by_bloodline))],
-        # names of graphs: barchart_median_win_by_blood lineplot_price_blood_time lineplot_sale_breed_time violin_price_by_breed avg_win_by_breed win_rate_by_breed
         main=[pn.Row(pn.Column(line_blood),
                     pn.Column(barchart_median_win_by_blood),
                     pn.Column(avg_win_by_bloodline)),
