@@ -46,9 +46,7 @@ def launch_dashboard(id):
     # BREED GRAPHS
 
     def display_df():
-        abc = market_data_no_outliers.loc[market_data_no_outliers['breed_type'] == horse.breed]
-        abc = market_data_no_outliers.loc[market_data_no_outliers['bloodline'] == horse.bloodline]
-
+        abc = market_data_no_outliers.loc[(market_data_no_outliers['breed_type'] == horse.breed) & (market_data_no_outliers['bloodline'] == horse.bloodline)]
         price_10p, price_25p, price_50p, price_75p, price_90p = np.percentile(abc['converted_price'], [10, 25, 50, 75, 90])
         win_rate_10p, win_rate_25p, win_rate_50p, win_rate_75p, win_rate_90p = np.percentile(abc['win_rate'], [10, 25, 50, 75, 90])
         races_10p, races_25p, races_50p, races_75p, races_90p = np.percentile(abc['overall.races'], [10, 25, 50, 75, 90])
