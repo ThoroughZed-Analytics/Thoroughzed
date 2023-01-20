@@ -60,9 +60,9 @@ def launch_dashboard(id):
         ## ***{horse.genotype}*** ***{horse.bloodline}*** ***{corrected_breed}***
         """
 
-    slider_message = " #### **Listing Price in USD:**"
+    slider_message = " #### **Bid Price in USD:**"
 
-    @interact(Price=(1, 1000))
+    @interact(Bid=(1, 10000))
     def slider(Price):
         if horse.total_races != 0:
             races = get_intrinsic_value_no_api(Price, horse)[2]
@@ -70,10 +70,10 @@ def launch_dashboard(id):
             result = f"""
             ### Financial Summary
             * **Total Winnings:** {"{0:.4f}".format(horse.total_winnings)} ETH 
-            * **Expected Market Value:** {relative_value}
+            * **ZEDstimate:** {relative_value}
             * **Expected Net Winnings / Race:** {horse_expected_winnings_per_race}
             * **Potential 3-Month Yield:** {yield_data}%
-            * **Races to Cover Listing Price:** {"{0:,}".format(races)}
+            * **Races to Cover Bid Price:** {"{0:,}".format(races)}
             ### Racing Stats
             * **Total Races:** {"{0:,}".format(horse.total_races)}
             * **Win Rate:** {"{0:.2f}".format(horse.win_rate)}%
