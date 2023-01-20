@@ -79,6 +79,7 @@ def launch_dashboard(id):
 
         data = [[ten_p_name,ten_p_values[0], ten_p_values[1], ten_p_values[2], ten_p_values[3]],[twenty_five_p_name, twenty_five_p_values[0],twenty_five_p_values[1], twenty_five_p_values[2], twenty_five_p_values[3]],[median_name, median_values[0], median_values[1], median_values[2], median_values[3]], [average_name, avg_values[0], avg_values[1], avg_values[2], avg_values[3]], [seven_five_p_name, seven_five_p_values[0], seven_five_p_values[1], seven_five_p_values[2], seven_five_p_values[3]], [nine_zero_p_name, nine_zero_p_values[0], nine_zero_p_values[1], nine_zero_p_values[2], nine_zero_p_values[3]]]
         xyz = pd.DataFrame(data,columns=['Percentile','Win Rate','Number of Races', 'Gross Winnings', 'Sale Price'])
+        xyz.style.set_properties(**{'text-align': 'right'})
         df_widget = pn.widgets.DataFrame(xyz, name="Stats",show_index=False)
         return df_widget
 
@@ -96,14 +97,6 @@ def launch_dashboard(id):
         plt.xlabel('Bloodline')
         plt.ylabel('Mean Number of Wins')
         plt.title('Mean Number of Wins by Bloodline')
-        return fig
-
-    def violin_price_by_breed():
-        fig = plt.figure()
-        sns.violinplot(data=market_data_no_outliers, x='breed_type', y='converted_price', order=['genesis','legendary', 'exclusive', 'elite', 'cross', 'pacer'])
-        plt.xlabel('Breed')
-        plt.ylabel('Sale Price (USD)')
-        plt.title('Sales Price by Breed')
         return fig
 
     def line_breed():
@@ -194,8 +187,7 @@ def launch_dashboard(id):
                     pn.Column(barchart_median_win_by_blood),
                     pn.Column(avg_win_by_bloodline)),
               pn.Row(pn.Column(line_breed),
-                    pn.Column(win_rate_by_breed),
-                    pn.Column(violin_price_by_breed)),
+                    pn.Column(win_rate_by_breed)),
                     pn.Row(pn.Column(display_df))],
         accent_base_color="#88d8b0",
     )
