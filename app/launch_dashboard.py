@@ -107,13 +107,15 @@ def launch_dashboard(id):
         return fig
 
     def hv_line_breed():
+        breed_daily['day_sold'] = pd.to_datetime(breed_daily['day_sold'])
+        xformatter = DatetimeTickFormatter(days="%Y-%m-%d")
         list_of_plots = [hv.Curve(breed_daily.loc[breed_daily['breed_type']=='genesis'][['day_sold', 'converted_price']], label='Genesis'),
             hv.Curve(breed_daily.loc[breed_daily['breed_type']=='legendary'][['day_sold', 'converted_price']], label='Legendary'),
             hv.Curve(breed_daily.loc[breed_daily['breed_type']=='exclusive'][['day_sold', 'converted_price']], label='Exclusive'),
             hv.Curve(breed_daily.loc[breed_daily['breed_type']=='elite'][['day_sold', 'converted_price']], label='Elite'),
             hv.Curve(breed_daily.loc[breed_daily['breed_type']=='cross'][['day_sold', 'converted_price']], label='Cross'),
             hv.Curve(breed_daily.loc[breed_daily['breed_type']=='pacer'][['day_sold', 'converted_price']], label='Pacer')]
-        return hv.Overlay(list_of_plots).opts(xlabel='Day Sold', ylabel='Price',title='HV line by breed', legend_position='right',width=1000, height=500, xformatter=DatetimeTickFormatter(days="%m/%d%Y",months="%m/%d%Y",hours="%m/%d%Y",minutes="%m/%d%Y"), xticks=10)
+        return hv.Overlay(list_of_plots).opts(xlabel='Day Sold', ylabel='Price',title='HV line by breed', legend_position='right',width=1000, height=500,xformatter=xformatter, xticks=10, xrotation=30)
 
     def line_breed():
         fig, ax = plt.subplots()
