@@ -3,6 +3,43 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from app.meta_data_query_and_loop_script import get_horse_data
 import ssl
+import pickle
+
+
+def train_model():
+
+    try:
+        _create_unverified_https_context = ssl._create_unverified_context
+    except AttributeError:
+        pass
+    else:
+        ssl._create_default_https_context = _create_unverified_https_context
+
+    # import data
+    clean_market_data = pd.read_csv('https://raw.githubusercontent.com/ThoroughZed-Analytics/Thoroughzed/dev/app/master_db_no_outliers.csv')
+
+    # drop rows where price is NA
+    clean_market_data = clean_market_data[~pd.isna(clean_market_data['converted_price'])]
+
+    # clean the dataset to only include desired predictors and separate out the X and y
+    # X will only have continuous variables for now
+
+    X = clean_market_data.drop(columns=['Unnamed: 0.1', 'converted_price', 'time_sold', 'horse_id', 'birthday', 'horse_id', 'mother',
+                                        'father', 'z_score', 'day_sold', 'bloodline', 'breed_type', 'color', 'genotype', 'horse_type', 'super_coat', 'Unnamed: 0'])
+
+    y = clean_market_data.converted_price
+
+    # Define the model
+    regr = RandomForestRegressor(random_state=0)
+
+    # set up model train and test splits
+    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=156, test_size=0.2, shuffle=True)
+
+    # Fit the RFR model to the data
+    regr.fit(X_train, y_train)
+
+    with open('rfr_model.pkl', 'wb') as f:
+        pickle.dump(regr, f)
 
 
 def predict_horse_price(horse):
@@ -28,21 +65,8 @@ def predict_horse_price(horse):
     # drop rows where price is NA
     clean_market_data = clean_market_data[~pd.isna(clean_market_data['converted_price'])]
 
-    # clean the dataset to only include desired predictors and separate out the X and y
-    # X will only have continuous variables for now
-
-    X = clean_market_data.drop(columns=['Unnamed: 0.1', 'converted_price', 'time_sold', 'horse_id', 'birthday', 'horse_id', 'mother', 'father', 'z_score', 'day_sold', 'bloodline', 'breed_type', 'color', 'genotype', 'horse_type', 'super_coat', 'Unnamed: 0'])
-
-    y = clean_market_data.converted_price
-
-    # Define the model
-    regr = RandomForestRegressor(random_state=0)
-
-    # set up model train and test splits
-    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=156, test_size=0.2, shuffle=True)
-
-    # Fit the RFR model to the data
-    regr.fit(X_train, y_train)
+    with open('app/rfr_model.pkl', 'rb') as f:
+        regr = pickle.load(f)
 
     # make a call to horse data api
     horse_id = horse
