@@ -1,18 +1,21 @@
 from app.model_predict import predict_horse_price
 from app.meta_data_query_and_loop_script import get_summary_horse_data
-from app.get_intrinsic_value import get_intrinsic_value
+from app.get_intrinsic_value import get_intrinsic_value, get_intrinsic_value_no_api
 from app.model_predict import predict_horse_price
 from app.Horse import Horse
 import pandas as pd
 import numpy as np
 import panel as pn
+from panel.interact import interact
 import holoviews as hv
+import hvplot.pandas
 import ssl
 import matplotlib.pyplot as plt
 import seaborn as sns
 import sklearn
 from matplotlib.ticker import MaxNLocator
 pn.extension('tabulator')
+from bokeh.models import DatetimeTickFormatter
 
 
 def launch_dashboard(id):
@@ -37,14 +40,19 @@ def launch_dashboard(id):
     market_data_no_outliers = pd.read_csv('https://raw.githubusercontent.com/ThoroughZed-Analytics/Thoroughzed/dev/app/master_db_no_outliers.csv')
 
     by_breed = market_data_no_outliers.groupby('breed_type').mean().reset_index()
-    breed_daily = market_data_no_outliers.groupby(['day_sold', 'breed_type']).mean()
+    breed_daily = market_data_no_outliers.groupby(['day_sold', 'breed_type']).mean().reset_index()
+    pd.to_datetime(breed_daily['day_sold'])
     by_blood = market_data_no_outliers.groupby('bloodline').median().reset_index()
     daily = market_data_no_outliers.groupby(['day_sold', 'bloodline']).mean()
 
     ################################################################################
 
     # BREED GRAPHS
-
+    @interact(ListingPrice=(1,1000))
+    def slider(ListingPrice):
+        a,b,c = get_intrinsic_value_no_api(int(horse.horse_id), ListingPrice,horse)
+        c = str(c) + ' Races Needed'
+        return c
     def display_df():
         abc = market_data_no_outliers.loc[(market_data_no_outliers['breed_type'] == horse.breed) & (market_data_no_outliers['bloodline'] == horse.bloodline)]
         price_10p, price_25p, price_50p, price_75p, price_90p = np.percentile(abc['converted_price'], [10, 25, 50, 75, 90])
@@ -97,6 +105,15 @@ def launch_dashboard(id):
         plt.ylabel('Mean Number of Wins')
         plt.title('Mean Number of Wins by Bloodline')
         return fig
+
+    def hv_line_breed():
+        list_of_plots = [hv.Curve(breed_daily.loc[breed_daily['breed_type']=='genesis'][['day_sold', 'converted_price']], label='Genesis'),
+            hv.Curve(breed_daily.loc[breed_daily['breed_type']=='legendary'][['day_sold', 'converted_price']], label='Legendary'),
+            hv.Curve(breed_daily.loc[breed_daily['breed_type']=='exclusive'][['day_sold', 'converted_price']], label='Exclusive'),
+            hv.Curve(breed_daily.loc[breed_daily['breed_type']=='elite'][['day_sold', 'converted_price']], label='Elite'),
+            hv.Curve(breed_daily.loc[breed_daily['breed_type']=='cross'][['day_sold', 'converted_price']], label='Cross'),
+            hv.Curve(breed_daily.loc[breed_daily['breed_type']=='pacer'][['day_sold', 'converted_price']], label='Pacer')]
+        return hv.Overlay(list_of_plots).opts(xlabel='Day Sold', ylabel='Price',title='HV line by breed', legend_position='right',width=1000, height=500, xformatter=DatetimeTickFormatter(days="%m/%d%Y",months="%m/%d%Y",hours="%m/%d%Y",minutes="%m/%d%Y"), xticks=10)
 
     def line_breed():
         fig, ax = plt.subplots()
@@ -182,12 +199,13 @@ def launch_dashboard(id):
     template = pn.template.FastListTemplate(
         title='ThoroughZED Analytics', logo='https://i.imgur.com/3rpZHfT.png', header_background='#09a59f', header_color='black', font='times', shadow=True, corner_radius=20, favicon='https://i.imgur.com/3rpZHfT.png', theme_toggle=False, busy_indicator=None,
         sidebar=[pn.pane.Markdown(sidebar_horse_data_message),
+                 pn.Row(slider),
                  pn.pane.PNG(horse.img_url, sizing_mode='scale_both')],
-        main=[pn.Row(pn.Column(display_df)),
-            pn.Row(pn.Row(pn.Column(line_blood),
-                    pn.Column(barchart_median_win_by_blood))),
-              pn.Row(pn.Column(line_breed),
-                    pn.Column(win_rate_by_breed))],
+        main=[pn.Row(pn.Column(display_df),(hv_line_breed)),
+                pn.Row(pn.Row(pn.Column(line_blood),
+                pn.Column(barchart_median_win_by_blood))),
+                pn.Row(pn.Column(line_breed),
+                pn.Column(win_rate_by_breed))],
         accent_base_color="#88d8b0",
     )
     template.show()

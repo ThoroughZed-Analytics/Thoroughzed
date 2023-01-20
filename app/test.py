@@ -51,12 +51,19 @@ ten_p_name, twenty_five_p_name, median_name, average_name, seven_five_p_name, ni
 
 data = [[ten_p_name,ten_p_values[0], ten_p_values[1], ten_p_values[2], ten_p_values[3]],[twenty_five_p_name, twenty_five_p_values[0],twenty_five_p_values[1], twenty_five_p_values[2], twenty_five_p_values[3]],[median_name, median_values[0], median_values[1], median_values[2], median_values[3]], [average_name, avg_values[0], avg_values[1], avg_values[2], avg_values[3]], [seven_five_p_name, seven_five_p_values[0], seven_five_p_values[1], seven_five_p_values[2], seven_five_p_values[3]], [nine_zero_p_name, nine_zero_p_values[0], nine_zero_p_values[1], nine_zero_p_values[2], nine_zero_p_values[3]]]
 xyz = pd.DataFrame(data,columns=['Percentile','Win Rate','Number of Races', 'Gross Winnings', 'Sale Price'])
-
+breed_daily_df = market_data_no_outliers[['day_sold','breed_type','converted_price']]
+# breed_daily = market_data_no_outliers.groupby(['day_sold', 'breed_type'])['test']['test2'].mean()
+# breed_daily = market_data_no_outliers[['day_sold', 'breed_type']]
+# breed_daily_df = pd.DataFrame({'mean': market_data_no_outliers.groupby(['day_sold', 'breed_type']).mean()}).reset_index()
 
 # print(len(abc))
 # print(len(new_abc))
 # print(len(below_average_abc))
 # print(abc['converted_price'].std())
 # print(abc['converted_price'].mean())
-print(xyz)
+# print(breed_daily)
+# print(f"{breed_daily['Unnamed: 0.1']}")
+# print(breed_daily['Unnamed: 0'])
+# print(market_data_no_outliers.columns)
+print(breed_daily_df)
 # print(market_data_no_outliers.columns)
