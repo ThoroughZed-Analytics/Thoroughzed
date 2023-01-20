@@ -1,3 +1,5 @@
+from app.meta_data_query_and_loop_script import get_horse_data
+
 class Horse:
     def __init__(self, horse_obj):
         self.name = horse_obj['data.horse.name'][0]
@@ -23,3 +25,9 @@ class Horse:
         self.show_rate = 0 if self.total_races == 0 else (self.first_place_finishes + self.second_place_finishes + self.third_place_finishes) / self.total_races * 100
         self.mother = horse_obj['data.horse.parents']
         self.father = horse_obj['data.horse.parents']
+        self.total_winnings = self.get_total_winnings(self.horse_id)
+    
+    def get_total_winnings(self, horse_id):
+        query_result = get_horse_data(horse_id)
+        total_winnings = query_result.total_paid[0]
+        return total_winnings
