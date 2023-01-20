@@ -158,7 +158,7 @@ def launch_dashboard(id):
             hv.Curve(breed_daily.loc[breed_daily['breed_type']=='elite'][['day_sold', 'converted_price']], label='Elite'),
             hv.Curve(breed_daily.loc[breed_daily['breed_type']=='cross'][['day_sold', 'converted_price']], label='Cross'),
             hv.Curve(breed_daily.loc[breed_daily['breed_type']=='pacer'][['day_sold', 'converted_price']], label='Pacer')]
-        return hv.Overlay(list_of_plots).opts(xlabel='Date', ylabel='Sale Price (USD)',title='Sale Price by Breed Over Time', legend_position='right',width=1000, height=500,xformatter=xformatter, xticks=10, xrotation=30)
+        return hv.Overlay(list_of_plots).opts(xlabel='Date', ylabel='Sale Price (USD)',title='Sale Price by Breed Over Time', legend_position='right',width=1000, height=500,xformatter=xformatter, xticks=10, xrotation=30,active_tools=['box_zoom'])
 
     def line_breed():
         fig, ax = plt.subplots()
