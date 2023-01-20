@@ -63,10 +63,10 @@ def launch_dashboard(id):
     slider_message = " #### **Bid Price in USD:**"
 
     @interact(Bid=(1, 10000))
-    def slider(Price):
+    def slider(Bid):
         if horse.total_races != 0:
-            races = get_intrinsic_value_no_api(Price, horse)[2]
-            yield_data = get_intrinsic_value_no_api(Price, horse)[1]
+            races = get_intrinsic_value_no_api(Bid, horse)[2]
+            yield_data = get_intrinsic_value_no_api(Bid, horse)[1]
             result = f"""
             ### Financial Summary
             * **Total Winnings:** {"{0:.4f}".format(horse.total_winnings)} ETH 
