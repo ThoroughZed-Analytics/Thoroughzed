@@ -26,6 +26,7 @@ def get_intrinsic_value(id, horse_cost):
 
     return ["{:.2f}".format(per_race_net_win), "{:.2f}".format(three_month_yield), math.ceil(races_needed)]
 
+
 def get_intrinsic_value_no_api(id, horse_cost, horse):
     total_races = horse.total_races
     win_rate = horse.win_rate / 100
