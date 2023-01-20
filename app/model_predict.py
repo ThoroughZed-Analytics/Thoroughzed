@@ -85,3 +85,7 @@ def predict_horse_price(horse):
     horse_to_predict = horse_to_predict.values.reshape(1,-1)
     prediction_test = regr.predict(horse_to_predict)
     return "{:.2f}".format(prediction_test[0])
+
+
+if __name__ == '__main__':
+    train_model()
