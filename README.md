@@ -1,6 +1,3 @@
-![](https://i.imgur.com/XeOzGxz.png)
-- *Image credit: zed.run*
-
 # ThoroughZED
 
 The number one tool for valuing NFT horses on the [ZED RUN](https://zed.run/) digital horse racing platform.
@@ -28,3 +25,6 @@ The number one tool for valuing NFT horses on the [ZED RUN](https://zed.run/) di
 
 ### Demo
 ![demo gif](./demo.gif)
+
+![](https://i.imgur.com/XeOzGxz.png)
+- *Image credit: zed.run*
