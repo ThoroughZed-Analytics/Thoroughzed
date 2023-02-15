@@ -1,4 +1,4 @@
-![](https://cdn.discordapp.com/attachments/1064590416575483936/1065768313617121341/10ItB7Xx2_Ctl_76P0qTxSt331y-2Z5avZYtoeVBzRdkxG9ikiw.png)
+![](https://i.imgur.com/XeOzGxz.png)
 *Image credit: zed.run*
 
 # ThoroughZED
