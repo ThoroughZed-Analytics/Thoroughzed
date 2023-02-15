@@ -1,5 +1,5 @@
 ![](https://i.imgur.com/XeOzGxz.png)
-*Image credit: zed.run*
+- *Image credit: zed.run*
 
 # ThoroughZED
 
