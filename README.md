@@ -1,6 +1,6 @@
 # ThoroughZED
 
-For this project we gathered, processed, analyized and visualized a large data set using machine learning and an interactive dashboard
+For this project we gathered, processed, analyzed and visualized a large data set using machine learning and an interactive dashboard
 
 ## Our Team
 
