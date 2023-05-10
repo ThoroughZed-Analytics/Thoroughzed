@@ -40,7 +40,7 @@ def launch_dashboard(id):
     # clean_market_data = pd.read_csv('https://raw.githubusercontent.com/ThoroughZed-Analytics/Thoroughzed/dev/app/master_db_no_outliers.csv')
     # clean_market_data = clean_market_data[~pd.isna(clean_market_data['converted_price'])]
     market_data_no_outliers = pd.read_csv(
-        "https://raw.githubusercontent.com/ThoroughZed-Analytics/Thoroughzed/dev/app/master_db_no_outliers.csv"
+        "https://raw.githubusercontent.com/ThoroughZed-Analytics/Thoroughzed/dev/data/dataset/dataset.csv"
     )
 
     by_breed = market_data_no_outliers.groupby("breed_type").mean().reset_index()

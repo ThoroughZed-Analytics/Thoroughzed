@@ -16,7 +16,7 @@ def train_model():
 
     # import data
     clean_market_data = pd.read_csv(
-        "https://raw.githubusercontent.com/ThoroughZed-Analytics/Thoroughzed/dev/app/master_db_no_outliers.csv"
+        "https://raw.githubusercontent.com/ThoroughZed-Analytics/Thoroughzed/dev/data/dataset/dataset.csv"
     )
 
     # drop rows where price is NA
@@ -85,7 +85,7 @@ def predict_horse_price(horse):
 
     # import data
     clean_market_data = pd.read_csv(
-        "https://raw.githubusercontent.com/ThoroughZed-Analytics/Thoroughzed/dev/app/master_db_no_outliers.csv"
+        "https://raw.githubusercontent.com/ThoroughZed-Analytics/Thoroughzed/dev/data/dataset/dataset.csv"
     )
 
     # drop rows where price is NA

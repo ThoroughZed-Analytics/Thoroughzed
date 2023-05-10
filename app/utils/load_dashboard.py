@@ -19,7 +19,7 @@ hv.extension('bokeh')
 
 pn.extension('tabulator')
 
-clean_market_data = pd.read_csv('https://raw.githubusercontent.com/ThoroughZed-Analytics/Thoroughzed/dev/app/master_db_no_outliers.csv')
+clean_market_data = pd.read_csv('https://raw.githubusercontent.com/ThoroughZed-Analytics/Thoroughzed/dev/data/dataset/dataset.csv')
 def open_dash():
     # ACCENT_COLOR = pn.template.FastGridTemplate.accent_base_color
 
