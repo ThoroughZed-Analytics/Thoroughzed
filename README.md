@@ -1,6 +1,6 @@
 # ThoroughZED
 
-The number one tool for valuing NFT horses on the [ZED RUN](https://zed.run/) digital horse racing platform.
+For this project we gathered, processed, analyized and visualized a large data set using machine learning and an interactive dashboard
 
 ## Our Team
 
