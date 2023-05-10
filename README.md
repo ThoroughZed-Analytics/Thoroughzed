@@ -17,14 +17,13 @@ The number one tool for valuing NFT horses on the [ZED RUN](https://zed.run/) di
   - See Harper's [article](https://rainierracingco.medium.com/how-to-value-a-zed-run-horse-fa8f3384ee54) on this method.
 - Command Line Interface that calculates estimations or launches dashboard
 
-## Use Cases
+## How to run
 
-- Find undervalued horses on the market and paying for horses that are unlikely to make a return.
-- Compare your horses' performance to that of other similar horses on the market.
-- Estimate a fair asking price when you choose to sell horses from your stable.
+- clone repo
+- `pip install -r requirements.txt`
+- `python -m app.train_model`
+- `python -m app.main`
 
 ### Demo
 ![demo gif](./demo.gif)
 
-![](https://i.imgur.com/XeOzGxz.png)
-- *Image credit: zed.run*
